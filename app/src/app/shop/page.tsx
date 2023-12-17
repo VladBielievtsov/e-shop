@@ -13,7 +13,7 @@ import ProductCard from "@/components/ProductCard";
 
 export default function Shop() {
   return (
-    <main className="flex">
+    <div className="flex">
       <div className="w-[280px] pt-12">
         <Filters />
       </div>
@@ -57,6 +57,6 @@ export default function Shop() {
           ))}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

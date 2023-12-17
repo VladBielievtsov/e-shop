@@ -8,7 +8,7 @@ import LatestProducts from "@/components/LatestProducts";
 
 export default function ProductPage() {
   return (
-    <main>
+    <div>
       <div className="inline-flex">
         <Link href="/shop" className="btn">
           <FaArrowLeftLong />
@@ -29,6 +29,6 @@ export default function ProductPage() {
       <div className="pt-20">
         <LatestProducts />
       </div>
-    </main>
+    </div>
   );
 }
