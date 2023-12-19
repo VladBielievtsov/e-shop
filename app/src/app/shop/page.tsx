@@ -10,8 +10,31 @@ import {
 } from "@nextui-org/react";
 import { BiSortDown, BiSortUp } from "react-icons/bi";
 import ProductCard from "@/components/ProductCard";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { RootState } from "@/lib/store";
+import { useEffect } from "react";
+import { fetchAllProducts } from "@/lib/features/products/productsActions";
 
 export default function Shop() {
+  const dispatch = useAppDispatch();
+
+  const productsStatus = useAppSelector(
+    (state: RootState) => state.products.status
+  );
+
+  const { data } = useAppSelector((state: RootState) => state.products);
+
+  useEffect(() => {
+    if (productsStatus === "idle") {
+      // @ts-ignore
+      dispatch(fetchAllProducts());
+    } else if (productsStatus === "loading") {
+      // setIsLoading(true);
+    } else {
+      // setIsLoading(false);
+    }
+  }, [productsStatus, dispatch]);
+
   return (
     <div className="flex">
       <div className="w-[280px] pt-12">
@@ -48,13 +71,15 @@ export default function Shop() {
           </Dropdown>
         </div>
         <div className="w-full grid grid-cols-3 gap-6 pt-6 pl-20">
-          {[...Array(10)].map((_, idx) => (
-            <ProductCard
-              key={idx}
-              img="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg"
-              backImg="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg"
-            />
-          ))}
+          {!!data &&
+            data.map((product, idx) => (
+              <ProductCard
+                product={product}
+                key={product.id}
+                img="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg"
+                backImg="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg"
+              />
+            ))}
         </div>
       </div>
     </div>

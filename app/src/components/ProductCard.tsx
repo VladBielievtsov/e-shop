@@ -1,3 +1,4 @@
+import { IProduct } from "@/lib/features/products/productsSlice";
 import Link from "next/link";
 import React from "react";
 import { BsHeart, BsCart2 } from "react-icons/bs";
@@ -5,9 +6,14 @@ import { BsHeart, BsCart2 } from "react-icons/bs";
 interface ProductCardProps {
   img: string;
   backImg: string;
+  product: IProduct;
 }
 
-export default function ProductCard({ img, backImg }: ProductCardProps) {
+export default function ProductCard({
+  img,
+  backImg,
+  product,
+}: ProductCardProps) {
   return (
     <div className="productCard">
       <div className="relative">
@@ -34,8 +40,8 @@ export default function ProductCard({ img, backImg }: ProductCardProps) {
         </button>
       </div>
       <Link href="/product/001" className="block pt-3 px-2">
-        <h2 className="font-bold uppercase text-xl">Women gf jins style</h2>
-        <h3 className="font-bold uppercase text-base">$21.99</h3>
+        <h2 className="font-bold uppercase text-xl">{product.title}</h2>
+        <h3 className="font-bold uppercase text-base">${product.price}</h3>
       </Link>
     </div>
   );

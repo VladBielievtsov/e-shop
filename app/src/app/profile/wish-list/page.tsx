@@ -1,7 +1,7 @@
 import ProductCard from "@/components/ProductCard";
 import React from "react";
 
-export default function page() {
+export default function WishList() {
   const products = [
     {
       img: "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg",

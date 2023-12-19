@@ -13,11 +13,13 @@ import {
   Button,
 } from "@nextui-org/react";
 import { BsCart2, BsHeart, BsPerson } from "react-icons/bs";
-import AuthWindow from "@/components/AuthWindow";
+import AuthModal from "@/components/AuthModal";
 import { useDisclosure } from "@nextui-org/react";
+import Cart from "./Cart";
 
 export default function Header() {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const authModal = useDisclosure();
+  const cartModal = useDisclosure();
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const pathname = usePathname();
 
@@ -83,50 +85,70 @@ export default function Header() {
           </nav>
 
           <div className="flex-1 flex items-center justify-end space-x-4">
-            <Link
-              href="/profile/wish-list"
-              className="border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
-            >
-              <BsHeart />
-            </Link>
-            <Badge content="5" color="primary" variant="solid">
-              <Link
-                href="/"
-                className="border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
-              >
-                <BsCart2 />
-              </Link>
-            </Badge>
             {isLoggedIn ? (
-              <Dropdown>
-                <DropdownTrigger>
-                  <Avatar
-                    src="https://i.pravatar.cc/150?u=a04258a2462d826712d"
-                    size="md"
-                    className="cursor-pointer"
-                  />
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Action event example">
-                  <DropdownItem key="profile">
-                    <Link href="/profile" className="w-full block">
-                      Profile
-                    </Link>
-                  </DropdownItem>
-                  <DropdownItem key="logout">Logout</DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+              <>
+                <Link
+                  href="/profile/wish-list"
+                  className="border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
+                >
+                  <BsHeart />
+                </Link>
+                <Badge content="5" color="primary" variant="solid">
+                  <Button
+                    onPress={cartModal.onOpen}
+                    className="bg-white px-0 min-w-0 border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
+                  >
+                    <BsCart2 />
+                  </Button>
+                </Badge>
+                <Dropdown>
+                  <DropdownTrigger>
+                    <Avatar
+                      src="https://i.pravatar.cc/150?u=a04258a2462d826712d"
+                      size="md"
+                      className="cursor-pointer"
+                    />
+                  </DropdownTrigger>
+                  <DropdownMenu aria-label="Action event example">
+                    <DropdownItem key="profile">
+                      <Link href="/profile" className="w-full block">
+                        Profile
+                      </Link>
+                    </DropdownItem>
+                    <DropdownItem key="logout">Logout</DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+              </>
             ) : (
-              <Button
-                onPress={onOpen}
-                className="bg-white min-w-0 p-0 border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
-              >
-                <BsPerson />
-              </Button>
+              <>
+                <Button
+                  onPress={authModal.onOpen}
+                  className="bg-white px-0 min-w-0 border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
+                >
+                  <BsHeart />
+                </Button>
+                <Button
+                  onPress={authModal.onOpen}
+                  className="bg-white px-0 min-w-0 border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
+                >
+                  <BsCart2 />
+                </Button>
+                <Button
+                  onPress={authModal.onOpen}
+                  className="bg-white min-w-0 p-0 border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
+                >
+                  <BsPerson />
+                </Button>
+              </>
             )}
           </div>
         </div>
       </header>
-      <AuthWindow isOpen={isOpen} onOpenChange={onOpenChange} />
+      <AuthModal
+        isOpen={authModal.isOpen}
+        onOpenChange={authModal.onOpenChange}
+      />
+      <Cart isOpen={cartModal.isOpen} onOpenChange={cartModal.onOpenChange} />
     </>
   );
 }

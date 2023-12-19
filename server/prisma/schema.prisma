@@ -24,20 +24,20 @@ model User {
   resetExp     String?
 }
 
-model Category {
-  id            Int        @id @default(autoincrement())
-  title         String
-  parent        Category?  @relation("Subcategories", fields: [parent_id], references: [id])
-  parent_id     Int?
-  subcategories Category[] @relation("Subcategories")
-  products      Product[]
-}
+// model Category {
+//   id            Int        @id @default(autoincrement())
+//   title         String
+//   parent        Category?  @relation("Subcategories", fields: [parent_id], references: [id])
+//   parent_id     Int?
+//   subcategories Category[] @relation("Subcategories")
+//   products      Product[]
+// }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  title       String
-  category    Category @relation(fields: [category_id], references: [id])
-  category_id Int
-  slug        String   @unique
-  price       Int
+  id    Int    @id @default(autoincrement())
+  title String
+  // category    Category @relation(fields: [category_id], references: [id])
+  // category_id Int
+  slug  String @unique
+  price Int
 }
