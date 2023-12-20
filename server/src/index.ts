@@ -3,7 +3,13 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import cors from "cors";
 import { getMe, login, logout, register } from "./controllers/UserController";
-import { createProduct, getProducts } from "./controllers/ProductController";
+import {
+  addSizeToProduct,
+  createProduct,
+  getAllSizeById,
+  getProductBySlug,
+  getProducts,
+} from "./controllers/ProductController";
 
 async function main() {
   const app = express();
@@ -31,6 +37,10 @@ async function main() {
   // PRODUCTS
   app.post("/product", createProduct);
   app.get("/products", getProducts);
+  app.get("/product/:slug", getProductBySlug);
+  //Sizes
+  app.post("/size", addSizeToProduct);
+  app.get("/sizes/:id", getAllSizeById);
 
   app.listen(PORT, () => {
     console.log(`Server is runing http://localhost:${PORT}`);

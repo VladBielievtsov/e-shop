@@ -18,7 +18,7 @@ export default function ProductCard({
     <div className="productCard">
       <div className="relative">
         <Link
-          href="/product/001"
+          href={"/product/" + product.slug}
           className="block rounded-[50px] overflow-hidden relative aspect-[9/11]"
         >
           <img
@@ -39,7 +39,7 @@ export default function ProductCard({
           <BsCart2 />
         </button>
       </div>
-      <Link href="/product/001" className="block pt-3 px-2">
+      <Link href={"/product/" + product.slug} className="block pt-3 px-2">
         <h2 className="font-bold uppercase text-xl">{product.title}</h2>
         <h3 className="font-bold uppercase text-base">${product.price}</h3>
       </Link>

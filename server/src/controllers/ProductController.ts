@@ -6,13 +6,15 @@ const prisma = new PrismaClient();
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
-    const { title, slug, price } = req.body;
+    const { title, slug, price, color, discount } = req.body;
 
     const product = await prisma.product.create({
       data: {
         title,
         slug,
         price,
+        color,
+        discount,
       },
     });
 
@@ -34,6 +36,63 @@ export const getProducts = async (req: Request, res: Response) => {
     console.error("Error during getting products:", err);
     res.status(500).json({
       msg: "Error during getting products",
+    });
+  }
+};
+
+export const getProductBySlug = async (req: Request, res: Response) => {
+  const { slug } = req.params;
+  try {
+    const product = await prisma.product.findUnique({
+      where: {
+        slug,
+      },
+    });
+
+    res.json(product);
+  } catch (err: any) {
+    console.error("Error during getting product by slug:", err);
+    res.status(500).json({
+      msg: "Error during getting product by slug",
+    });
+  }
+};
+
+export const addSizeToProduct = async (req: Request, res: Response) => {
+  try {
+    const { productId, name, value } = req.body;
+
+    const productSizes = await prisma.productSize.create({
+      data: {
+        productId,
+        name,
+        value,
+      },
+    });
+
+    res.json(productSizes);
+  } catch (err: any) {
+    console.error("Error during adding sizes to product:", err);
+    res.status(500).json({
+      msg: "Error during adding sizes to product",
+    });
+  }
+};
+
+export const getAllSizeById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const sizes = await prisma.productSize.findMany({
+      where: {
+        productId: +id,
+      },
+    });
+
+    res.json(sizes);
+  } catch (err: any) {
+    console.error("Error during getting sizes to product:", err);
+    res.status(500).json({
+      msg: "Error during getting sizes to product",
     });
   }
 };

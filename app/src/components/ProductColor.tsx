@@ -1,7 +1,7 @@
 import React from "react";
 
 interface ProductColorProps {
-  color: string;
+  color: string | undefined;
 }
 
 export default function ProductColor({ color }: ProductColorProps) {

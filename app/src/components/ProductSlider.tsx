@@ -8,7 +8,11 @@ import "swiper/css";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import ProductColor from "./ProductColor";
 
-export default function ProductSlider() {
+interface ProductSliderProps {
+  color: string | undefined;
+}
+
+export default function ProductSlider({ color }: ProductSliderProps) {
   const [thumbsSwiper, setThumbsSwiper] = useState<null | boolean>(null);
 
   const images = [
@@ -30,6 +34,7 @@ export default function ProductSlider() {
           spaceBetween={0}
           slidesPerView={4}
           watchSlidesProgress
+          // @ts-ignore
           onSwiper={setThumbsSwiper}
           direction="vertical"
           className="w-full overflow-hidden relative h-[536.88px]"
@@ -51,16 +56,21 @@ export default function ProductSlider() {
           slidesPerView={1}
           modules={[Navigation, Thumbs]}
           thumbs={{
+            // @ts-ignore
             swiper:
+              // @ts-ignore
               thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
           }}
           navigation={{
             nextEl: ".swiper-button-next",
             prevEl: ".swiper-button-prev",
           }}
-          className="rounded-[50px] max-w-full rounded-se-none overflow-hidden relative"
+          className={`rounded-[50px] max-w-full overflow-hidden relative ${
+            color ? "rounded-se-none" : ""
+          }`}
         >
-          <ProductColor color="Red" />
+          {color && <ProductColor color={color} />}
+
           {images.map((img, idx) => (
             <SwiperSlide key={idx}>
               <img src={img} alt="alt" className="block aspect-[9/11]" />

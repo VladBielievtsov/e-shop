@@ -7,6 +7,7 @@ export interface IProduct {
   color: string;
   slug: string;
   price: number;
+  discount: number;
 }
 
 export interface ProductsState {
