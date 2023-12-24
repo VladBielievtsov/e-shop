@@ -44,9 +44,11 @@ export default function ProductPage() {
   return (
     <div>
       <div className="inline-flex">
-        <Link href="/shop" className="btn">
+        <Link
+          href="/shop"
+          className="text-xs border border-zinc-200 flex items-center justify-center w-10 h-10 rounded-xl hover:bg-[#f3af7f] hover:border-[#f3af7f] duration-150"
+        >
           <FaArrowLeftLong />
-          <span>Back</span>
         </Link>
       </div>
       <div className="flex pt-10">

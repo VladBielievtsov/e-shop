@@ -28,7 +28,7 @@ img {
 }
 
 .btn {
-  @apply flex items-center border border-black rounded-full py-2 px-4 text-sm duration-150 hover:bg-yellow-300 hover:border-yellow-300;
+  @apply flex items-center border border-black rounded-xl py-2 px-4 text-sm duration-150 hover:bg-[#f3af7f] hover:border-[#f3af7f];
 }
 
 .btn span {

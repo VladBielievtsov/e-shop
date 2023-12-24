@@ -33,9 +33,9 @@ export default function WishList() {
     <div>
       <h2 className="uppercase font-bold text-2xl">Wish List</h2>
       <div className="grid grid-cols-3 gap-6 mt-10">
-        {products.map((product, idx) => (
+        {/* {products.map((product, idx) => (
           <ProductCard img={product.img} backImg={product.backImg} />
-        ))}
+        ))} */}
       </div>
     </div>
   );

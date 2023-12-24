@@ -13,14 +13,16 @@ import {
   Button,
 } from "@nextui-org/react";
 import { BsCart2, BsHeart, BsPerson } from "react-icons/bs";
+import { SlHandbag } from "react-icons/sl";
 import AuthModal from "@/components/AuthModal";
 import { useDisclosure } from "@nextui-org/react";
 import Cart from "./Cart";
+import { Toaster } from "react-hot-toast";
 
 export default function Header() {
   const authModal = useDisclosure();
   const cartModal = useDisclosure();
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
 
   const navLinks = [
@@ -44,7 +46,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="border-b border-zinc-800 fixed top-0 left-0 right-0 z-50 bg-[#fff]">
+      <header className="border-b border-zinc-200 fixed top-0 left-0 right-0 z-50 bg-[#fff]">
         <div className="container mx-auto flex items-center justify-between px-4 py-6">
           <div className="flex-1">
             <Link href="/">
@@ -89,16 +91,16 @@ export default function Header() {
               <>
                 <Link
                   href="/profile/wish-list"
-                  className="border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
+                  className="border border-zinc-200 flex items-center justify-center w-10 h-10 rounded-xl hover:bg-[#f3af7f] hover:border-[#f3af7f] duration-150"
                 >
                   <BsHeart />
                 </Link>
                 <Badge content="5" color="primary" variant="solid">
                   <Button
                     onPress={cartModal.onOpen}
-                    className="bg-white px-0 min-w-0 border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
+                    className="bg-white px-0 min-w-0 border border-zinc-200 flex items-center justify-center w-10 h-10 rounded-xl hover:bg-[#f3af7f] hover:border-[#f3af7f] duration-150"
                   >
-                    <BsCart2 />
+                    <SlHandbag />
                   </Button>
                 </Badge>
                 <Dropdown>
@@ -106,7 +108,7 @@ export default function Header() {
                     <Avatar
                       src="https://i.pravatar.cc/150?u=a04258a2462d826712d"
                       size="md"
-                      className="cursor-pointer"
+                      className="cursor-pointer rounded-xl"
                     />
                   </DropdownTrigger>
                   <DropdownMenu aria-label="Action event example">
@@ -131,7 +133,7 @@ export default function Header() {
                   onPress={authModal.onOpen}
                   className="bg-white px-0 min-w-0 border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
                 >
-                  <BsCart2 />
+                  <SlHandbag />
                 </Button>
                 <Button
                   onPress={authModal.onOpen}
@@ -149,6 +151,7 @@ export default function Header() {
         onOpenChange={authModal.onOpenChange}
       />
       <Cart isOpen={cartModal.isOpen} onOpenChange={cartModal.onOpenChange} />
+      <Toaster position="top-center" reverseOrder={false} />
     </>
   );
 }

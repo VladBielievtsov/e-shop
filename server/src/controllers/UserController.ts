@@ -25,7 +25,7 @@ export const register = async (req: Request, res: Response) => {
   } catch (err: any) {
     console.error("Error during registration:", err);
     res.status(500).json({
-      msg: "Error during registration",
+      msg: "This email address is already taken",
     });
   }
 };

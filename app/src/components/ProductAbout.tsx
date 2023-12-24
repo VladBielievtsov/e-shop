@@ -7,6 +7,7 @@ import SelectColor from "./SelectColor";
 import { CustomCheckbox } from "./CustomCheckbox";
 import { LuScrollText } from "react-icons/lu";
 import { BsCart2, BsHeart } from "react-icons/bs";
+import { SlHandbag } from "react-icons/sl";
 import { IProduct } from "@/lib/features/products/productsSlice";
 import { ISize } from "@/app/product/[slug]/page";
 
@@ -87,8 +88,8 @@ export default function ProductAbout({ product, sizes }: ProductAboutProps) {
       </div>
       <div className="flex items-center space-x-4 mt-8">
         <button className="btn large black">
-          <BsCart2 />
-          <span>Add to card</span>
+          <SlHandbag />
+          <span>Add to bag</span>
         </button>
         <button className="btn large">
           <BsHeart />

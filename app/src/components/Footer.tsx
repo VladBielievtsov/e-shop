@@ -88,25 +88,25 @@ export default function Footer() {
           <div className="flex items-center space-x-4 mt-6">
             <Link
               href="/"
-              className="border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
+              className="border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#f3af7f] hover:border-[#f3af7f] duration-150"
             >
               <FaFacebook />
             </Link>
             <Link
               href="/"
-              className="border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
+              className="border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#f3af7f] hover:border-[#f3af7f] duration-150"
             >
               <FaTwitter />
             </Link>
             <Link
               href="/"
-              className="border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
+              className="border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#f3af7f] hover:border-[#f3af7f] duration-150"
             >
               <FaYoutube />
             </Link>
             <Link
               href="/"
-              className="border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
+              className="border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#f3af7f] hover:border-[#f3af7f] duration-150"
             >
               <FaInstagram />
             </Link>
