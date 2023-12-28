@@ -1,8 +1,15 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import cors from "cors";
-import { getMe, login, logout, register } from "./controllers/UserController";
+import {
+  getMe,
+  login,
+  logout,
+  register,
+  update,
+} from "./controllers/UserController";
 import {
   addSizeToProduct,
   createProduct,
@@ -10,17 +17,18 @@ import {
   getProductBySlug,
   getProducts,
 } from "./controllers/ProductController";
+import checkAuth from "./middleware/checkAuth";
 
 async function main() {
   const app = express();
   app.use(express.json());
-
   app.use(
     cors({
       origin: "http://localhost:3000",
       credentials: true,
     })
   );
+  app.use(cookieParser("secret key"));
 
   const PORT = process.env.PORT || 4040;
 
@@ -32,7 +40,8 @@ async function main() {
   app.post("/register", register);
   app.post("/login", login);
   app.post("/logout", logout);
-  app.post("/getme", getMe);
+  app.get("/getme", checkAuth, getMe);
+  app.patch("/update", checkAuth, update);
 
   // PRODUCTS
   app.post("/product", createProduct);

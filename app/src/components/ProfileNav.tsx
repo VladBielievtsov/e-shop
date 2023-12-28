@@ -3,9 +3,13 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { logout } from "@/lib/features/auth/authSlice";
+import { useAppDispatch } from "@/lib/hooks";
 
 export default function ProfileNav() {
   const pathname = usePathname();
+
+  const dispatch = useAppDispatch();
 
   const profileLinks = [
     {
@@ -36,7 +40,11 @@ export default function ProfileNav() {
         </li>
       ))}
       <li>
-        <Link href="/" className="uppercase text-2xl font-bold hover:underline">
+        <Link
+          href="#"
+          onClick={() => dispatch(logout())}
+          className="uppercase text-2xl font-bold hover:underline"
+        >
           Logout
         </Link>
       </li>

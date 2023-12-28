@@ -5,12 +5,12 @@ import { Modal, ModalContent, Tabs, Tab } from "@nextui-org/react";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 
-interface AuthWindowProps {
+interface AuthModalProps {
   isOpen: boolean;
   onOpenChange: () => void;
 }
 
-export default function AuthWindow({ isOpen, onOpenChange }: AuthWindowProps) {
+export default function AuthModal({ isOpen, onOpenChange }: AuthModalProps) {
   const [isVisiblePass, setIsVisiblePass] = React.useState(false);
   const toggleVisibility = () => setIsVisiblePass(!isVisiblePass);
 

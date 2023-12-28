@@ -32,12 +32,6 @@ export default function ProductCard({
             className="absolute h-full object-cover productCard__hide"
           />
         </Link>
-        <button className="absolute top-6 right-6 text-white border bg-zinc-500 flex items-center justify-center w-10 h-10 rounded-full">
-          <BsHeart />
-        </button>
-        <button className="absolute top-[75px] right-6 text-white border bg-zinc-500 flex items-center justify-center w-10 h-10 rounded-full">
-          <BsCart2 />
-        </button>
       </div>
       <Link href={"/product/" + product.slug} className="block pt-3 px-2">
         <h2 className="font-bold uppercase text-xl">{product.title}</h2>

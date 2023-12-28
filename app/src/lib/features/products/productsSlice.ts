@@ -1,5 +1,6 @@
 import { createSlice, SerializedError } from "@reduxjs/toolkit";
 import { fetchAllProducts } from "./productsActions";
+import { Favorite } from "@/components/FavoriteBtn";
 
 export interface IProduct {
   id: number;
@@ -8,6 +9,7 @@ export interface IProduct {
   slug: string;
   price: number;
   discount: number;
+  favorites: Favorite[];
 }
 
 export interface ProductsState {

@@ -19,8 +19,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={(roboto.className, "bg-[#fff] min-h-screen")}>
+    <html lang="en" suppressHydrationWarning={true}>
+      <body
+        className={(roboto.className, "bg-[#fff] min-h-screen")}
+        suppressHydrationWarning={true}
+      >
         <Providers>
           <div className="flex flex-col overflow-hidden min-h-screen">
             <Header />

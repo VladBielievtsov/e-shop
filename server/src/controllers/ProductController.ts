@@ -96,3 +96,22 @@ export const getAllSizeById = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const getFavorite = async (req: Request, res: Response) => {
+  try {
+    const productId = req.body.productId;
+    const favorite = await prisma.favorite.findUnique({
+      where: {
+        productId_userId: {
+          productId,
+          userId,
+        },
+      },
+    });
+  } catch (err: any) {
+    console.error("Error during getting favorite:", err);
+    res.status(500).json({
+      msg: "Error during getting favorite",
+    });
+  }
+};

@@ -10,6 +10,9 @@ import { BsCart2, BsHeart } from "react-icons/bs";
 import { SlHandbag } from "react-icons/sl";
 import { IProduct } from "@/lib/features/products/productsSlice";
 import { ISize } from "@/app/product/[slug]/page";
+import FavoriteBtn from "./FavoriteBtn";
+import { useAppSelector } from "@/lib/hooks";
+import { RootState } from "@/lib/store";
 
 interface ProductAboutProps {
   product: IProduct | undefined;
@@ -17,6 +20,7 @@ interface ProductAboutProps {
 }
 
 export default function ProductAbout({ product, sizes }: ProductAboutProps) {
+  const { userInfo } = useAppSelector((state: RootState) => state.auth);
   const [sizeSelected, setSizeSelected] = useState([""]);
   const [runningOut, setRunningOut] = useState<boolean>(false);
 
@@ -91,10 +95,7 @@ export default function ProductAbout({ product, sizes }: ProductAboutProps) {
           <SlHandbag />
           <span>Add to bag</span>
         </button>
-        <button className="btn large">
-          <BsHeart />
-          <span>Favorite</span>
-        </button>
+        <FavoriteBtn product={product} userId={userInfo?.id} />
       </div>
     </div>
   );

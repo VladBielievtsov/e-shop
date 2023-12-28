@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   Avatar,
   Badge,
@@ -18,12 +19,29 @@ import AuthModal from "@/components/AuthModal";
 import { useDisclosure } from "@nextui-org/react";
 import Cart from "./Cart";
 import { Toaster } from "react-hot-toast";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { RootState } from "@/lib/store";
+import { useGetUserDetailsQuery } from "@/lib/features/auth/authService";
+import { setCredentials, logout } from "@/lib/features/auth/authSlice";
+import { deleteCookie } from "cookies-next";
 
 export default function Header() {
   const authModal = useDisclosure();
   const cartModal = useDisclosure();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const pathname = usePathname();
+  const { userInfo } = useAppSelector((state: RootState) => state.auth);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const { data, isFetching } = useGetUserDetailsQuery("userDetails", {
+    pollingInterval: 900000,
+  });
+
+  console.log(data);
+
+  useEffect(() => {
+    if (data) dispatch(setCredentials(data));
+  }, [data, dispatch]);
 
   const navLinks = [
     {
@@ -43,6 +61,8 @@ export default function Header() {
       name: "Contact us",
     },
   ];
+
+  console.log(userInfo);
 
   return (
     <>
@@ -87,7 +107,7 @@ export default function Header() {
           </nav>
 
           <div className="flex-1 flex items-center justify-end space-x-4">
-            {isLoggedIn ? (
+            {!!userInfo ? (
               <>
                 <Link
                   href="/profile/wish-list"
@@ -117,7 +137,12 @@ export default function Header() {
                         Profile
                       </Link>
                     </DropdownItem>
-                    <DropdownItem key="logout">Logout</DropdownItem>
+                    <DropdownItem
+                      key="logout"
+                      onClick={() => dispatch(logout())}
+                    >
+                      Logout
+                    </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
               </>
@@ -125,19 +150,19 @@ export default function Header() {
               <>
                 <Button
                   onPress={authModal.onOpen}
-                  className="bg-white px-0 min-w-0 border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
+                  className="bg-white px-0 min-w-0 border border-zinc-200 flex items-center justify-center w-10 h-10 rounded-xl hover:bg-yellow-300 hover:border-yellow-300 duration-150"
                 >
                   <BsHeart />
                 </Button>
                 <Button
                   onPress={authModal.onOpen}
-                  className="bg-white px-0 min-w-0 border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
+                  className="bg-white px-0 min-w-0 border border-zinc-200 flex items-center justify-center w-10 h-10 rounded-xl hover:bg-yellow-300 hover:border-yellow-300 duration-150"
                 >
                   <SlHandbag />
                 </Button>
                 <Button
                   onPress={authModal.onOpen}
-                  className="bg-white min-w-0 p-0 border border-zinc-800 flex items-center justify-center w-10 h-10 rounded-full hover:bg-yellow-300 hover:border-yellow-300 duration-150"
+                  className="bg-white min-w-0 p-0 border border-zinc-200 flex items-center justify-center w-10 h-10 rounded-xl hover:bg-yellow-300 hover:border-yellow-300 duration-150"
                 >
                   <BsPerson />
                 </Button>

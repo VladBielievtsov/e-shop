@@ -116,3 +116,30 @@ export const getMe = async (req: AuthRequest, res: Response) => {
     });
   }
 };
+
+export const update = async (req: AuthRequest, res: Response) => {
+  try {
+    // @ts-ignore
+    const id = req.userId.id;
+    const user = await prisma.user.update({
+      where: {
+        id: +id,
+      },
+      data: {
+        name: req.body.name,
+        phone: req.body.phone,
+        email: req.body.email,
+        region: req.body.region,
+        city: req.body.city,
+        postOffice: req.body.postOffice,
+      },
+    });
+
+    res.json(user);
+  } catch (error: any) {
+    console.error("Error updating profile:", error);
+    res.status(500).json({
+      msg: "Error updating profile",
+    });
+  }
+};
