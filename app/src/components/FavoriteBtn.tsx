@@ -2,7 +2,8 @@
 
 import { UserInfo } from "@/lib/features/auth/authSlice";
 import { IProduct } from "@/lib/features/products/productsSlice";
-import React, { useOptimistic } from "react";
+import axios from "axios";
+import React, { useEffect, useOptimistic, useState } from "react";
 import { BsHeart } from "react-icons/bs";
 
 interface FavoriteBtnProps {
@@ -19,32 +20,58 @@ export interface Favorite {
 }
 
 export default function FavoriteBtn({ product, userId }: FavoriteBtnProps) {
-  // const predicate = (favorite: Favorite) =>
-  //   favorite.userId === userId && favorite.productId === product?.id;
+  const [isActive, setIsActive] = useState<boolean>(false);
 
-  // const [optimisticFavorites, addOptimisticFavorites] = useOptimistic<
-  //   Favorite[]
-  // >(
-  //   product?.favorites,
-  //   //@ts-ignore
-  //   (state: Favorite[], newFavorite: Favorite) =>
-  //     state.some(predicate)
-  //       ? state.filter((favorite) => favorite.userId !== userId)
-  //       : [...state, newFavorite]
-  // );
+  async function isFavorite(productId: number | undefined) {
+    const result = await axios({
+      method: "get",
+      url: process.env.BACKEND_URL + `/favorites/${productId}`,
+      headers: {},
+      withCredentials: true,
+    })
+      .then((data) => {
+        data.data === null ? setIsActive(false) : setIsActive(true);
+      })
+      .catch(() => {
+        setIsActive(false);
+      });
+  }
 
-  async function addToFavorites(value: FormDataEntryValue | null) {}
+  useEffect(() => {
+    if (product !== undefined) {
+      isFavorite(product.id);
+    }
+  }),
+    [];
+
+  function onSubmitHandler(e: React.FormEvent) {
+    e.preventDefault();
+    !isActive ? addToFavorites(product?.id) : removeFromFavorites(product?.id);
+  }
+
+  async function addToFavorites(productId: number | undefined) {
+    const result = await axios({
+      method: "post",
+      url: process.env.BACKEND_URL + `/favorites/${productId}`,
+      headers: {},
+      withCredentials: true,
+    });
+    setIsActive(true);
+  }
+
+  async function removeFromFavorites(productId: number | undefined) {
+    const result = await axios({
+      method: "delete",
+      url: process.env.BACKEND_URL + `/favorites/${productId}`,
+      headers: {},
+      withCredentials: true,
+    });
+    setIsActive(false);
+  }
 
   return (
-    <form
-      action={async (formData: FormData) => {
-        const productId = formData.get("productId");
-        // addOptimisticFavorites({ productId, userId });
-        await addToFavorites(productId);
-      }}
-    >
-      <input type="hidden" name="productId" value={product?.id} />
-      <button type="submit" className="btn large">
+    <form onSubmit={onSubmitHandler}>
+      <button type="submit" className={`btn large ${isActive ? "active" : ""}`}>
         <BsHeart />
         <span>Favorite</span>
       </button>

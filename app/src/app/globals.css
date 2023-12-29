@@ -47,6 +47,10 @@ img {
   @apply bg-black text-white hover:bg-zinc-800 hover:border-zinc-800;
 }
 
+.btn.active {
+  @apply bg-[#f3af7f] border-[#f3af7f] hover:bg-[#f0bf9c]
+}
+
 .swiper-button-disabled {
   @apply bg-default-600;
 }

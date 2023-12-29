@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { AuthRequest } from "../middleware/checkAuth";
 const prisma = new PrismaClient();
 
 // Create Product
@@ -97,21 +98,65 @@ export const getAllSizeById = async (req: Request, res: Response) => {
   }
 };
 
-export const getFavorite = async (req: Request, res: Response) => {
+export const isFavorite = async (req: AuthRequest, res: Response) => {
   try {
-    const productId = req.body.productId;
+    const { id } = req.params;
+
     const favorite = await prisma.favorite.findUnique({
       where: {
         productId_userId: {
-          productId,
-          userId,
+          productId: +id,
+          //@ts-ignore
+          userId: req.userId?.id,
         },
       },
     });
+    res.json(favorite);
   } catch (err: any) {
-    console.error("Error during getting favorite:", err);
+    console.error("Error during getting is favorite:", err);
     res.status(500).json({
-      msg: "Error during getting favorite",
+      msg: "Error during getting is favorite",
+    });
+  }
+};
+
+export const removeFromFavorites = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const favorite = await prisma.favorite.delete({
+      where: {
+        productId_userId: {
+          productId: +id,
+          //@ts-ignore
+          userId: req.userId?.id,
+        },
+      },
+    });
+    res.json(favorite);
+  } catch (err: any) {
+    console.error("Error during removing from favorite:", err);
+    res.status(500).json({
+      msg: "Error during removing from favorite",
+    });
+  }
+};
+
+export const addToFavorites = async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  try {
+    const favorite = await prisma.favorite.create({
+      data: {
+        productId: +id,
+        //@ts-ignore
+        userId: req.userId?.id,
+      },
+    });
+    res.json(favorite);
+  } catch (err: any) {
+    console.error("Error during adding to favorite:", err);
+    res.status(500).json({
+      msg: "Error during adding to favorite",
     });
   }
 };

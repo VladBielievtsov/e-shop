@@ -12,10 +12,13 @@ import {
 } from "./controllers/UserController";
 import {
   addSizeToProduct,
+  addToFavorites,
   createProduct,
   getAllSizeById,
   getProductBySlug,
   getProducts,
+  isFavorite,
+  removeFromFavorites,
 } from "./controllers/ProductController";
 import checkAuth from "./middleware/checkAuth";
 
@@ -47,9 +50,13 @@ async function main() {
   app.post("/product", createProduct);
   app.get("/products", getProducts);
   app.get("/product/:slug", getProductBySlug);
-  //Sizes
+  // Sizes
   app.post("/size", addSizeToProduct);
   app.get("/sizes/:id", getAllSizeById);
+  // Favorites
+  app.get("/favorites/:id", checkAuth, isFavorite);
+  app.post("/favorites/:id", checkAuth, addToFavorites);
+  app.delete("/favorites/:id", checkAuth, removeFromFavorites);
 
   app.listen(PORT, () => {
     console.log(`Server is runing http://localhost:${PORT}`);
