@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Accordion,
   AccordionItem,
@@ -12,40 +13,18 @@ import {
 import { CustomCheckbox } from "./CustomCheckbox";
 
 export default function Filters() {
-  const defaultContent =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [selectedLength, setSelectedLength] = useState([""]);
-  const length = ["mini", "mid", "maxi"];
+  const [categorySelected, setCategorySelected] = useState<string[]>(
+    searchParams.getAll("category") ? searchParams.getAll("category") : []
+  );
+  const categories = ["kids", "child", "women", "men"];
 
-  const [categorySelected, setCategorySelected] = useState([""]);
-  const categories = [
-    "kids",
-    "child",
-    "women",
-    "men",
-    "body",
-    "sport",
-    "sustainability",
-    "divided",
-  ];
+  const [sizeSelected, setSizeSelected] = useState<string[]>(
+    searchParams.getAll("sizes") ? searchParams.getAll("sizes") : []
+  );
 
-  const [selectedBrand, setSelectedBrand] = useState([""]);
-  const brands = [
-    "Ralph Lauren",
-    "Vans",
-    "Nike",
-    "New Balance",
-    "Moschimo",
-    "Gucci",
-    "Zara",
-    "Poma",
-    "Roberto Cavalli",
-    "Belstaff",
-    "Giorgio Amani",
-  ];
-
-  const [sizeSelected, setSizeSelected] = useState([""]);
   const sizes = [
     "xxxs",
     "xxs",
@@ -59,7 +38,38 @@ export default function Filters() {
     "xxxxl",
   ];
 
-  const [price, setPrice] = useState([0, 5000]);
+  const [price, setPrice] = useState<number[]>([
+    searchParams.get("priceFrom")
+      ? parseInt(searchParams.get("priceFrom")!)
+      : 0,
+    searchParams.get("priceTo") ? parseInt(searchParams.get("priceTo")!) : 5000,
+  ]);
+
+  function applyHandler() {
+    const path = [];
+    // price
+    const priceFrom = price[0] !== 0 && "priceFrom=" + price[0];
+    const priceTo = price[1] !== 5000 && "priceTo=" + price[1];
+
+    !!priceFrom && path.push(priceFrom);
+    !!priceTo && path.push(priceTo);
+
+    // sizes
+    if (sizeSelected.length) {
+      for (let i = 0; i < sizeSelected.length; i++) {
+        path.push("sizes=" + sizeSelected[i]);
+      }
+    }
+
+    // category
+    if (categorySelected.length) {
+      for (let i = 0; i < categorySelected.length; i++) {
+        path.push("category=" + categorySelected[i]);
+      }
+    }
+
+    router.push(`/shop?${path.join("&")}`);
+  }
 
   return (
     <aside>
@@ -70,25 +80,6 @@ export default function Filters() {
       >
         <AccordionItem
           key="1"
-          aria-label="Length"
-          title={<h3 className="uppercase text-2xl font-bold">Length</h3>}
-        >
-          <div className="flex flex-col gap-3 pb-4">
-            <CheckboxGroup
-              color="black"
-              value={selectedLength}
-              onValueChange={setSelectedLength}
-            >
-              {length.map((len, idx) => (
-                <Checkbox value={len} key={idx}>
-                  <span className="font-bold uppercase">{len}</span>
-                </Checkbox>
-              ))}
-            </CheckboxGroup>
-          </div>
-        </AccordionItem>
-        <AccordionItem
-          key="2"
           aria-label="Category"
           title={<h3 className="uppercase text-2xl font-bold">Category</h3>}
         >
@@ -99,7 +90,6 @@ export default function Filters() {
               value={categorySelected}
               onValueChange={setCategorySelected}
             >
-              <CustomCheckbox value="all">all</CustomCheckbox>
               {categories.map((categorym, idx) => (
                 <CustomCheckbox value={categorym} key={idx}>
                   {categorym}
@@ -108,27 +98,9 @@ export default function Filters() {
             </CheckboxGroup>
           </div>
         </AccordionItem>
+
         <AccordionItem
-          key="3"
-          aria-label="Brand"
-          title={<h3 className="uppercase text-2xl font-bold">Brand</h3>}
-        >
-          <div className="flex flex-col gap-3 pb-4">
-            <CheckboxGroup
-              color="black"
-              value={selectedBrand}
-              onValueChange={setSelectedBrand}
-            >
-              {brands.map((brand, idx) => (
-                <Checkbox value={brand} key={idx}>
-                  <span className="font-bold uppercase">{brand}</span>
-                </Checkbox>
-              ))}
-            </CheckboxGroup>
-          </div>
-        </AccordionItem>
-        <AccordionItem
-          key="4"
+          key="2"
           aria-label="Size"
           title={<h3 className="uppercase text-2xl font-bold">Size</h3>}
         >
@@ -148,7 +120,7 @@ export default function Filters() {
           </div>
         </AccordionItem>
         <AccordionItem
-          key="5"
+          key="3"
           aria-label="Price"
           title={<h3 className="uppercase text-2xl font-bold">Price</h3>}
         >
@@ -158,17 +130,26 @@ export default function Filters() {
               <span className="uppercase font-bold">${price[1]}</span>
             </div>
             <Slider
+              aria-label="price"
               step={100}
               maxValue={5000}
               minValue={0}
               value={price}
+              //@ts-ignore
               onChange={setPrice}
               className="w-full"
             />
           </div>
         </AccordionItem>
       </Accordion>
-      <div></div>
+      <div className="mt-3">
+        <button
+          className="btn large black w-full justify-center"
+          onClick={() => applyHandler()}
+        >
+          <span>Apply</span>
+        </button>
+      </div>
     </aside>
   );
 }
