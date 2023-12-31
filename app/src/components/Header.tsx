@@ -36,7 +36,7 @@ export default function Header() {
     pollingInterval: 900000,
   });
 
-  // console.log(data);
+  const cartItems = useAppSelector((state: RootState) => state.cart);
 
   useEffect(() => {
     if (data) dispatch(setCredentials(data));
@@ -112,14 +112,28 @@ export default function Header() {
                 >
                   <BsHeart />
                 </Link>
-                <Badge content={0} color="primary" variant="solid">
+                {cartItems.data.length ? (
+                  <Badge
+                    content={cartItems.data.length}
+                    color="primary"
+                    variant="solid"
+                  >
+                    <Button
+                      onPress={cartModal.onOpen}
+                      className="bg-white px-0 min-w-0 border border-zinc-200 flex items-center justify-center w-10 h-10 rounded-xl hover:bg-[#f3af7f] hover:border-[#f3af7f] duration-150"
+                    >
+                      <SlHandbag />
+                    </Button>
+                  </Badge>
+                ) : (
                   <Button
                     onPress={cartModal.onOpen}
                     className="bg-white px-0 min-w-0 border border-zinc-200 flex items-center justify-center w-10 h-10 rounded-xl hover:bg-[#f3af7f] hover:border-[#f3af7f] duration-150"
                   >
                     <SlHandbag />
                   </Button>
-                </Badge>
+                )}
+
                 <Dropdown>
                   <DropdownTrigger>
                     <Avatar

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import { v4 as uuidv4 } from "uuid";
 import { CheckboxGroup } from "@nextui-org/react";
 import SelectColor from "./SelectColor";
 import { CustomCheckbox } from "./CustomCheckbox";
@@ -11,9 +11,10 @@ import { SlHandbag } from "react-icons/sl";
 import { IProduct } from "@/lib/features/products/productsSlice";
 import { ISize } from "@/app/product/[slug]/page";
 import FavoriteBtn from "./FavoriteBtn";
-import { useAppSelector } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { RootState } from "@/lib/store";
 import toast from "react-hot-toast";
+import { addToCart } from "@/lib/features/cart/cartSlice";
 
 interface ProductAboutProps {
   product: IProduct | undefined;
@@ -25,6 +26,7 @@ export default function ProductAbout({ product, sizes }: ProductAboutProps) {
   const [sizeSelected, setSizeSelected] = useState<string[]>([]);
   const [runningOut, setRunningOut] = useState<boolean>(false);
   const [isError, setIsError] = useState<string | undefined>();
+  const dispatch = useAppDispatch();
 
   const quantity = sizes?.reduce((acc, cur) => acc + cur.value, 0);
 
@@ -38,12 +40,13 @@ export default function ProductAbout({ product, sizes }: ProductAboutProps) {
 
   const notifySuccess = () => toast.success("Product added to the cart");
 
-  function addToCart() {
+  function addToCartHandler() {
     setIsError("");
     if (!sizeSelected.length) {
       setIsError("Select size");
     } else {
       const item = {
+        id: uuidv4(),
         title: product?.title,
         productId: product?.id,
         slug: product?.slug,
@@ -57,9 +60,11 @@ export default function ProductAbout({ product, sizes }: ProductAboutProps) {
       };
 
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      console.log(item);
 
       cart.push(item);
       localStorage.setItem("cart", JSON.stringify(cart));
+      dispatch(addToCart(item));
 
       notifySuccess();
     }
@@ -123,7 +128,10 @@ export default function ProductAbout({ product, sizes }: ProductAboutProps) {
       </div>
       <div className="flex items-center space-x-4 mt-8">
         {quantity ? (
-          <button className="btn large black" onClick={() => addToCart()}>
+          <button
+            className="btn large black"
+            onClick={() => addToCartHandler()}
+          >
             <SlHandbag />
             <span>Add to bag</span>
           </button>

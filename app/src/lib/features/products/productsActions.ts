@@ -1,5 +1,4 @@
 import { SerializedError, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 
 const backendURL = process.env.BACKEND_URL || "http://localhost:4040";
 
@@ -8,7 +7,7 @@ export const fetchAllProducts = createAsyncThunk<
   { rejectValue: SerializedError }
 >("products/fetchAllProducts", async (_, { rejectWithValue }) => {
   try {
-    const data = await fetch(`http://localhost:4040/products`, {
+    const data = await fetch(`${backendURL}/products`, {
       method: "GET",
     });
 

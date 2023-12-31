@@ -1,7 +1,6 @@
 import { createSlice, SerializedError } from "@reduxjs/toolkit";
 import { getCookie, hasCookie, deleteCookie } from "cookies-next";
 import { authLogin } from "./authActions";
-import { Favorite } from "@/components/FavoriteBtn";
 
 export interface UserInfo {
   id: number;
@@ -16,7 +15,6 @@ export interface UserInfo {
   resetPassKey: string;
   resetExp: string;
   token: string;
-  favorites: Favorite[];
 }
 
 type CookieValueTypes = string | undefined;
