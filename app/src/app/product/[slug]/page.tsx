@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import ProductAbout from "@/components/ProductAbout";
 import ProductSlider from "@/components/ProductSlider";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import ProductInfo from "@/components/ProductInfo";
 import LatestProducts from "@/components/LatestProducts";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 import { IProduct } from "@/lib/features/products/productsSlice";
+import { Button } from "@nextui-org/react";
 
 export interface ISize {
   id: number;
@@ -20,17 +21,25 @@ export interface ISize {
 
 export default function ProductPage() {
   const pathname = usePathname();
+  const router = useRouter();
   const [product, setProduct] = useState<IProduct>();
   const [sizes, setSizes] = useState<ISize[]>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function getProductBySlug(slug: string) {
-    const product = await axios.get(`${process.env.BACKEND_URL}${slug}`);
-    setProduct(product.data);
+    setIsLoading(true);
+    await axios.get(`${process.env.BACKEND_URL}${slug}`).then((response) => {
+      setProduct(response.data);
+      setIsLoading(false);
+    });
   }
 
   async function getAllSizesById(id: number) {
-    const sizes = await axios.get(`${process.env.BACKEND_URL}/sizes/${id}`);
-    setSizes(sizes.data);
+    await axios
+      .get(`${process.env.BACKEND_URL}/sizes/${id}`)
+      .then((response) => {
+        setSizes(response.data);
+      });
   }
 
   useEffect(() => {
@@ -44,19 +53,27 @@ export default function ProductPage() {
   return (
     <div>
       <div className="inline-flex">
-        <Link
-          href="/shop"
-          className="text-xs border border-zinc-200 flex items-center justify-center w-10 h-10 rounded-xl hover:bg-[#f3af7f] hover:border-[#f3af7f] duration-150"
+        <Button
+          onClick={() => router.back()}
+          className="text-xs bg-white px-0 min-w-0 border border-zinc-200 flex items-center justify-center w-10 h-10 rounded-xl hover:bg-[#f3af7f] hover:border-[#f3af7f] duration-150"
         >
           <FaArrowLeftLong />
-        </Link>
+        </Button>
       </div>
-      <div className="flex pt-10">
+      <div className="flex pt-10 min-h-[700px]">
         <div className="w-1/2">
-          <ProductSlider color={product?.color} />
+          {!isLoading ? (
+            <ProductSlider color={product?.color} />
+          ) : (
+            <h3>Loading...</h3>
+          )}
         </div>
-        <div className="w-1/2 pl-32">
-          <ProductAbout product={product} sizes={sizes} />
+        <div className="w-1/2 pl-32 relative">
+          {!isLoading ? (
+            <ProductAbout product={product} sizes={sizes} />
+          ) : (
+            <h3>Loding</h3>
+          )}
         </div>
       </div>
       <div className="pt-10">

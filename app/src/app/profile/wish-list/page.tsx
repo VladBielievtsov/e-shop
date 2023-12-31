@@ -1,41 +1,51 @@
+"use client";
+
 import ProductCard from "@/components/ProductCard";
-import React from "react";
+import SkeletonCard from "@/components/SkeletonCard";
+import { IProduct } from "@/lib/features/products/productsSlice";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 export default function WishList() {
-  const products = [
-    {
-      img: "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg",
-      backImg:
-        "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg",
-    },
-    {
-      img: "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg",
-      backImg:
-        "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg",
-    },
-    {
-      img: "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg",
-      backImg:
-        "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg",
-    },
-    {
-      img: "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg",
-      backImg:
-        "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg",
-    },
-    {
-      img: "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg",
-      backImg:
-        "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg",
-    },
-  ];
+  const [favorites, setFavorites] = useState<IProduct[] | undefined>();
+  const fav = JSON.parse(localStorage.getItem("favoriteProducts") || "[]");
+
+  async function getProductsByIds() {
+    await axios({
+      method: "post",
+      url: `${process.env.BACKEND_URL}/favorites`,
+      data: {
+        indexes: fav,
+      },
+    }).then((response) => {
+      setFavorites(response.data);
+    });
+  }
+
+  useEffect(() => {
+    getProductsByIds();
+  }, []);
+
   return (
     <div>
       <h2 className="uppercase font-bold text-2xl">Wish List</h2>
       <div className="grid grid-cols-3 gap-6 mt-10">
-        {/* {products.map((product, idx) => (
-          <ProductCard img={product.img} backImg={product.backImg} />
-        ))} */}
+        {fav.length !== 0 ? (
+          favorites ? (
+            favorites?.map((product, idx) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                img="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg"
+                backImg="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg"
+              />
+            ))
+          ) : (
+            <SkeletonCard />
+          )
+        ) : (
+          <h3 className="text-xl">There are no wish products</h3>
+        )}
       </div>
     </div>
   );

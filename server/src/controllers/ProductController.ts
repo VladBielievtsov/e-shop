@@ -59,6 +59,28 @@ export const getProductBySlug = async (req: Request, res: Response) => {
   }
 };
 
+export const getProductsByIds = async (req: Request, res: Response) => {
+  const ids = req.body.indexes;
+
+  try {
+    if (req.body.indexes) {
+      const products = await prisma.product.findMany({
+        where: {
+          id: { in: ids },
+        },
+      });
+      res.json(products);
+    } else {
+      res.json([]);
+    }
+  } catch (err: any) {
+    console.error("Error during getting products by ids:", err);
+    res.status(500).json({
+      msg: "Error during getting products by ids",
+    });
+  }
+};
+
 export const addSizeToProduct = async (req: Request, res: Response) => {
   try {
     const { productId, name, value } = req.body;
@@ -94,69 +116,6 @@ export const getAllSizeById = async (req: Request, res: Response) => {
     console.error("Error during getting sizes to product:", err);
     res.status(500).json({
       msg: "Error during getting sizes to product",
-    });
-  }
-};
-
-export const isFavorite = async (req: AuthRequest, res: Response) => {
-  try {
-    const { id } = req.params;
-
-    const favorite = await prisma.favorite.findUnique({
-      where: {
-        productId_userId: {
-          productId: +id,
-          //@ts-ignore
-          userId: req.userId?.id,
-        },
-      },
-    });
-    res.json(favorite);
-  } catch (err: any) {
-    console.error("Error during getting is favorite:", err);
-    res.status(500).json({
-      msg: "Error during getting is favorite",
-    });
-  }
-};
-
-export const removeFromFavorites = async (req: AuthRequest, res: Response) => {
-  try {
-    const { id } = req.params;
-
-    const favorite = await prisma.favorite.delete({
-      where: {
-        productId_userId: {
-          productId: +id,
-          //@ts-ignore
-          userId: req.userId?.id,
-        },
-      },
-    });
-    res.json(favorite);
-  } catch (err: any) {
-    console.error("Error during removing from favorite:", err);
-    res.status(500).json({
-      msg: "Error during removing from favorite",
-    });
-  }
-};
-
-export const addToFavorites = async (req: AuthRequest, res: Response) => {
-  const { id } = req.params;
-  try {
-    const favorite = await prisma.favorite.create({
-      data: {
-        productId: +id,
-        //@ts-ignore
-        userId: req.userId?.id,
-      },
-    });
-    res.json(favorite);
-  } catch (err: any) {
-    console.error("Error during adding to favorite:", err);
-    res.status(500).json({
-      msg: "Error during adding to favorite",
     });
   }
 };

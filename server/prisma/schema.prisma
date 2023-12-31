@@ -11,31 +11,17 @@ datasource db {
 }
 
 model User {
-  id           Int        @id @default(autoincrement())
-  email        String     @unique
+  id           Int     @id @default(autoincrement())
+  email        String  @unique
   name         String?
   password     String
   phone        String?
   region       String?
   city         String?
   postOffice   String?
-  role         String     @default("user")
-  resetPassKey String?    @unique
+  role         String  @default("user")
+  resetPassKey String? @unique
   resetExp     String?
-  favorites    Favorite[]
-}
-
-model Favorite {
-  id        Int      @id @unique @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User?    @relation(fields: [userId], references: [id])
-  userId    Int?
-  product   Product? @relation(fields: [productId], references: [id])
-  productId Int?
-
-  @@unique([productId, userId])
-  @@index([userId])
 }
 
 model Product {
@@ -50,7 +36,6 @@ model Product {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
   sizes     ProductSize[]
-  favorites Favorite[]
 }
 
 model ProductSize {

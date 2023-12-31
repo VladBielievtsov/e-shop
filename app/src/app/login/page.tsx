@@ -33,7 +33,7 @@ export default function Login() {
   };
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
+    // console.log(data);
   };
   return (
     <div className="max-w-[384px] w-full mx-auto py-40">

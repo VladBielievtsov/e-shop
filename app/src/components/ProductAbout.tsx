@@ -13,6 +13,7 @@ import { ISize } from "@/app/product/[slug]/page";
 import FavoriteBtn from "./FavoriteBtn";
 import { useAppSelector } from "@/lib/hooks";
 import { RootState } from "@/lib/store";
+import toast from "react-hot-toast";
 
 interface ProductAboutProps {
   product: IProduct | undefined;
@@ -21,8 +22,9 @@ interface ProductAboutProps {
 
 export default function ProductAbout({ product, sizes }: ProductAboutProps) {
   const { userInfo } = useAppSelector((state: RootState) => state.auth);
-  const [sizeSelected, setSizeSelected] = useState([""]);
+  const [sizeSelected, setSizeSelected] = useState<string[]>([]);
   const [runningOut, setRunningOut] = useState<boolean>(false);
+  const [isError, setIsError] = useState<string | undefined>();
 
   const quantity = sizes?.reduce((acc, cur) => acc + cur.value, 0);
 
@@ -33,6 +35,35 @@ export default function ProductAbout({ product, sizes }: ProductAboutProps) {
       setRunningOut(false);
     }
   }, [quantity]);
+
+  const notifySuccess = () => toast.success("Product added to the cart");
+
+  function addToCart() {
+    setIsError("");
+    if (!sizeSelected.length) {
+      setIsError("Select size");
+    } else {
+      const item = {
+        title: product?.title,
+        productId: product?.id,
+        slug: product?.slug,
+        price: product?.discount
+          ? product?.discount
+          : product?.price && product?.price,
+        totalPrice: product?.discount
+          ? product?.discount * sizeSelected.length
+          : product?.price && product?.price * sizeSelected.length,
+        size: sizeSelected,
+      };
+
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+      cart.push(item);
+      localStorage.setItem("cart", JSON.stringify(cart));
+
+      notifySuccess();
+    }
+  }
 
   return (
     <div>
@@ -91,12 +122,17 @@ export default function ProductAbout({ product, sizes }: ProductAboutProps) {
         </a>
       </div>
       <div className="flex items-center space-x-4 mt-8">
-        <button className="btn large black">
-          <SlHandbag />
-          <span>Add to bag</span>
-        </button>
-        <FavoriteBtn product={product} userId={userInfo?.id} />
+        {quantity ? (
+          <button className="btn large black" onClick={() => addToCart()}>
+            <SlHandbag />
+            <span>Add to bag</span>
+          </button>
+        ) : (
+          <></>
+        )}
+        <FavoriteBtn product={product} />
       </div>
+      {!!isError && <p className="mt-2 text-red-500">{isError}</p>}
     </div>
   );
 }

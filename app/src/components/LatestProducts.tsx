@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { RootState } from "@/lib/store";
 import { Skeleton } from "@nextui-org/react";
 import { fetchAllProducts } from "@/lib/features/products/productsActions";
+import SkeletonCard from "./SkeletonCard";
 
 export default function LatestProducts() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -29,33 +30,6 @@ export default function LatestProducts() {
     }
   }, [productsStatus, dispatch]);
 
-  const products = [
-    {
-      img: "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg",
-      backImg:
-        "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg",
-    },
-    {
-      img: "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg",
-      backImg:
-        "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg",
-    },
-    {
-      img: "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg",
-      backImg:
-        "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg",
-    },
-    {
-      img: "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg",
-      backImg:
-        "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg",
-    },
-    {
-      img: "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg",
-      backImg:
-        "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg",
-    },
-  ];
   return (
     <div>
       <h2 className="uppercase font-bold text-5xl">Latest products</h2>
@@ -77,20 +51,8 @@ export default function LatestProducts() {
             ))}
         </Swiper>
       ) : (
-        <div className="grid grid-cols-4">
-          {[...Array(4)].map((_, idx) => (
-            <div className="max-w-[339px] mt-12" key={idx}>
-              <Skeleton className="rounded-[50px] w-full">
-                <div className="h-[414px] w-full rounded-[50px] bg-default-300"></div>
-              </Skeleton>
-              <Skeleton className="rounded-full mt-4 mx-2">
-                <div className="h-[28px] rounded-full bg-default-200"></div>
-              </Skeleton>
-              <Skeleton className="rounded-full mt-1 mx-2 w-10">
-                <div className="h-[24px] rounded-full bg-default-200"></div>
-              </Skeleton>
-            </div>
-          ))}
+        <div className="grid grid-cols-4 mb-12">
+          <SkeletonCard />
         </div>
       )}
     </div>

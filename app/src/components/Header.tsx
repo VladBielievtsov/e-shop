@@ -31,13 +31,12 @@ export default function Header() {
   const pathname = usePathname();
   const { userInfo } = useAppSelector((state: RootState) => state.auth);
   const dispatch = useAppDispatch();
-  const router = useRouter();
 
   const { data, isFetching } = useGetUserDetailsQuery("userDetails", {
     pollingInterval: 900000,
   });
 
-  console.log(data);
+  // console.log(data);
 
   useEffect(() => {
     if (data) dispatch(setCredentials(data));
@@ -61,8 +60,6 @@ export default function Header() {
       name: "Contact us",
     },
   ];
-
-  console.log(userInfo);
 
   return (
     <>
@@ -115,7 +112,7 @@ export default function Header() {
                 >
                   <BsHeart />
                 </Link>
-                <Badge content="5" color="primary" variant="solid">
+                <Badge content={0} color="primary" variant="solid">
                   <Button
                     onPress={cartModal.onOpen}
                     className="bg-white px-0 min-w-0 border border-zinc-200 flex items-center justify-center w-10 h-10 rounded-xl hover:bg-[#f3af7f] hover:border-[#f3af7f] duration-150"

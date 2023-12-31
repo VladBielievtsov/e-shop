@@ -95,7 +95,13 @@ export default function RegisterForm({ onClose }: RegisterFormProps) {
             variant="bordered"
             errorMessage={errors.email?.message || isError}
             isInvalid={!!errors.email}
-            {...register("email", { required: "Email Address is required" })}
+            {...register("email", {
+              required: "Email Address is required",
+              pattern: {
+                value: /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,
+                message: "Please enter a valid email",
+              },
+            })}
           />
 
           <Input
