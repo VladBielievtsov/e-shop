@@ -7,11 +7,14 @@ const prisma = new PrismaClient();
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
-    const { title, slug, price, color, discount } = req.body;
+    const { title, description, price, color, discount } = req.body;
+
+    const slug = title.split(" ").join("-").toLowerCase();
 
     const product = await prisma.product.create({
       data: {
         title,
+        description,
         slug,
         price,
         color,
@@ -24,6 +27,25 @@ export const createProduct = async (req: Request, res: Response) => {
     console.error("Error during creating product:", err);
     res.status(500).json({
       msg: "Error during creating product",
+    });
+  }
+};
+
+export const deleteProduct = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    await prisma.product.delete({
+      where: {
+        id: +id,
+      },
+    });
+
+    res.json("Product: #" + id + " has been deleted");
+  } catch (err: any) {
+    console.error("Error during deleting product:", err);
+    res.status(500).json({
+      msg: "Error during deleting product",
     });
   }
 };
@@ -55,6 +77,24 @@ export const getProductBySlug = async (req: Request, res: Response) => {
     console.error("Error during getting product by slug:", err);
     res.status(500).json({
       msg: "Error during getting product by slug",
+    });
+  }
+};
+
+export const getProductById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const product = await prisma.product.findUnique({
+      where: {
+        id: +id,
+      },
+    });
+
+    res.json(product);
+  } catch (err: any) {
+    console.error("Error during getting product by id:", err);
+    res.status(500).json({
+      msg: "Error during getting product by id",
     });
   }
 };

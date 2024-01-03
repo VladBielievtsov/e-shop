@@ -20,8 +20,6 @@ export const authLogin = createAsyncThunk<
       { email, password },
       config
     );
-    // store user's token in local storage
-    //localStorage.setItem("token", data.token);
     setCookie("token", data.token);
     return data;
   } catch (error: any) {

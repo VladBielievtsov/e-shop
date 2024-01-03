@@ -37,7 +37,7 @@ export default function RegisterForm({ onClose }: RegisterFormProps) {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsError("");
     setIsLoading(true);
-    const user = await axios({
+    await axios({
       method: "post",
       url: process.env.BACKEND_URL + "/register",
       headers: {},

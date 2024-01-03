@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import Filters from "@/components/Filters";
 import {
   Avatar,
@@ -14,15 +15,17 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { RootState } from "@/lib/store";
 import { useEffect } from "react";
 import { fetchAllProducts } from "@/lib/features/products/productsActions";
+import { IProduct } from "@/lib/features/products/productsSlice";
 
 export default function Shop() {
+  const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
 
   const productsStatus = useAppSelector(
     (state: RootState) => state.products.status
   );
 
-  const { data } = useAppSelector((state: RootState) => state.products);
+  let { data } = useAppSelector((state: RootState) => state.products);
 
   useEffect(() => {
     if (productsStatus === "idle") {
@@ -34,6 +37,16 @@ export default function Shop() {
       // setIsLoading(false);
     }
   }, [productsStatus, dispatch]);
+
+  useEffect(() => {
+    if (data) {
+      data = data?.filter((product: IProduct) => {
+        product.price > parseInt(searchParams.get("priceFrom")!) &&
+          product.price < parseInt(searchParams.get("priceTo")!);
+      });
+      console.log(data);
+    }
+  });
 
   return (
     <div className="flex">

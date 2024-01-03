@@ -27,6 +27,10 @@ const config: Config = {
               DEFAULT: "#000",
               foreground: "#fff",
             },
+            default: {
+              DEFAULT: "#fff",
+              foreground: "#000",
+            },
           },
         },
       },

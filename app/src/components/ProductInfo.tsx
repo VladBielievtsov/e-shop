@@ -3,7 +3,11 @@
 import { Accordion, AccordionItem } from "@nextui-org/react";
 import React from "react";
 
-export default function ProductInfo() {
+interface ProductInfoProps {
+  desc: string | undefined;
+}
+
+export default function ProductInfo({ desc }: ProductInfoProps) {
   return (
     <div className="max-w-[1250px] mx-auto border-t-1 border-b-1 border-divider">
       <Accordion selectionMode="multiple" className="px-0">
@@ -12,7 +16,7 @@ export default function ProductInfo() {
           aria-label="Length"
           title={<h3 className="uppercase text-2xl font-bold">Details</h3>}
         >
-          Hello
+          {desc}
         </AccordionItem>
         <AccordionItem
           key="2"

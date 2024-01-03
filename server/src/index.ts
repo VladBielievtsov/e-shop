@@ -13,7 +13,9 @@ import {
 import {
   addSizeToProduct,
   createProduct,
+  deleteProduct,
   getAllSizeById,
+  getProductById,
   getProductBySlug,
   getProducts,
   getProductsByIds,
@@ -46,8 +48,10 @@ async function main() {
 
   // PRODUCTS
   app.post("/product", createProduct);
+  app.delete("/product/:id", deleteProduct);
   app.get("/products", getProducts);
   app.get("/product/:slug", getProductBySlug);
+  app.get("/panel-product/:id", getProductById);
   app.post("/favorites", getProductsByIds);
   // Sizes
   app.post("/size", addSizeToProduct);

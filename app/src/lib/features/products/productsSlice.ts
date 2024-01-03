@@ -4,6 +4,7 @@ import { fetchAllProducts } from "./productsActions";
 export interface IProduct {
   id: number;
   title: string;
+  description: string;
   color: string;
   slug: string;
   price: number;

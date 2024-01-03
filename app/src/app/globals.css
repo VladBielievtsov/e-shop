@@ -47,6 +47,10 @@ img {
   @apply bg-black text-white hover:bg-zinc-800 hover:border-zinc-800;
 }
 
+.btn.red {
+  @apply bg-red-500 border-red-600 text-white hover:bg-red-400 hover:border-red-600;
+}
+
 .btn.active {
   @apply bg-[#f3af7f] border-[#f3af7f] hover:bg-[#f0bf9c]
 }

@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { redirect } from "next/navigation";
 import ProfileNav from "@/components/ProfileNav";
 import { useAppSelector } from "@/lib/hooks";
 import { RootState } from "@/lib/store";
@@ -20,23 +18,31 @@ export default function ProfileLayout({
 
   const links = [
     {
-      href: "/profile",
-      name: "User details",
+      href: "/panel",
+      name: "Dashboard",
     },
     {
-      href: "/profile/wish-list",
-      name: "Wish List",
+      href: "/panel/orders",
+      name: "Orders",
     },
     {
-      href: "/profile/purchase-history",
-      name: "Purchase History",
+      href: "/panel/products",
+      name: "Products",
+    },
+    {
+      href: "/panel/clients",
+      name: "Clients",
+    },
+    {
+      href: "/panel/statistics",
+      name: "Statistics",
     },
   ];
 
   return (
     <div>
       <h1 className="font-bold text-black uppercase text-5xl text-center">
-        Profile
+        Panel
       </h1>
       <div className="flex mt-20">
         <div>

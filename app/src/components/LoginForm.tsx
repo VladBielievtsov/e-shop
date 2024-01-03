@@ -13,8 +13,6 @@ import {
 } from "@nextui-org/react";
 import { IoMail, IoEye, IoEyeOff } from "react-icons/io5";
 import { useForm, SubmitHandler } from "react-hook-form";
-import axios from "axios";
-import toast from "react-hot-toast";
 import { Spinner } from "@nextui-org/react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { RootState } from "@/lib/store";
@@ -48,9 +46,14 @@ export default function LoginForm({
   const router = useRouter();
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    await dispatch(authLogin(data));
-    router.push("/profile");
-    onClose();
+    const res = await dispatch(authLogin(data));
+    console.log(res);
+    if (res.meta.requestStatus === "rejected") {
+      setIsError("User not found");
+    } else {
+      router.push("/profile");
+      onClose();
+    }
   };
 
   return (
@@ -66,7 +69,7 @@ export default function LoginForm({
             label="Email"
             placeholder="Enter your email"
             variant="bordered"
-            errorMessage={errors.email?.message || isError}
+            errorMessage={errors.email?.message}
             isInvalid={!!errors.email}
             {...register("email", {
               required: "Email Address is required",
@@ -94,7 +97,7 @@ export default function LoginForm({
             placeholder="Enter your password"
             type={isVisiblePass ? "text" : "password"}
             variant="bordered"
-            errorMessage={errors.password?.message}
+            errorMessage={errors.password?.message || isError}
             isInvalid={!!errors.password}
             {...register("password", {
               required: "Password Address is required",

@@ -77,7 +77,7 @@ export default function ProductPage() {
         </div>
       </div>
       <div className="pt-10">
-        <ProductInfo />
+        <ProductInfo desc={product?.description} />
       </div>
       <div className="pt-20">
         <LatestProducts />

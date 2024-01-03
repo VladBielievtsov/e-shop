@@ -6,28 +6,23 @@ import { usePathname } from "next/navigation";
 import { logout } from "@/lib/features/auth/authSlice";
 import { useAppDispatch } from "@/lib/hooks";
 
-export default function ProfileNav() {
+interface ILinks {
+  name: string;
+  href: string;
+}
+
+interface ProfileNav {
+  links: ILinks[];
+}
+
+export default function ProfileNav({ links }: ProfileNav) {
   const pathname = usePathname();
 
   const dispatch = useAppDispatch();
 
-  const profileLinks = [
-    {
-      href: "/profile",
-      name: "User details",
-    },
-    {
-      href: "/profile/wish-list",
-      name: "Wish List",
-    },
-    {
-      href: "/profile/purchase-history",
-      name: "Purchase History",
-    },
-  ];
   return (
     <ul className="space-y-4">
-      {profileLinks.map((nav) => (
+      {links.map((nav) => (
         <li key={nav.name}>
           <Link
             href={nav.href}
