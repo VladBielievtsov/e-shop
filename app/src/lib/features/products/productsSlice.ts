@@ -1,5 +1,9 @@
-import { createSlice, SerializedError } from "@reduxjs/toolkit";
-import { fetchAllProducts } from "./productsActions";
+import { createSlice, SerializedError, PayloadAction } from "@reduxjs/toolkit";
+import {
+  fetchAllProducts,
+  createProduct,
+  deleteProduct,
+} from "./productsActions";
 
 export interface IProduct {
   id: number;
@@ -12,7 +16,7 @@ export interface IProduct {
 }
 
 export interface ProductsState {
-  data: IProduct[] | null;
+  data: IProduct[] | null | undefined;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: null | SerializedError | undefined;
 }
@@ -36,13 +40,20 @@ const productsSlice = createSlice({
     builder.addCase(fetchAllProducts.fulfilled, (state, { payload }) => {
       state.status = "succeeded";
       state.error = null;
-      // @ts-ignore
       state.data = payload;
     });
     builder.addCase(fetchAllProducts.rejected, (state, { payload }) => {
       state.status = "failed";
       // @ts-ignore
       state.error = payload;
+    });
+    // Create product
+    builder.addCase(createProduct.fulfilled, (state, { payload }) => {
+      state.data?.push(payload);
+    });
+    // Delete product
+    builder.addCase(deleteProduct.fulfilled, (state, { payload }) => {
+      state.data = state.data?.filter((product) => product.id !== payload.id);
     });
   },
 });

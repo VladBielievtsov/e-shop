@@ -1,7 +1,6 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
-import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import ProductAbout from "@/components/ProductAbout";
 import ProductSlider from "@/components/ProductSlider";
 import { FaArrowLeftLong } from "react-icons/fa6";
@@ -49,6 +48,23 @@ export default function ProductPage() {
   useEffect(() => {
     if (product) getAllSizesById(product.id);
   }, [product]);
+
+  if (!product)
+    return (
+      <div>
+        <div className="inline-flex">
+          <Button
+            onClick={() => router.back()}
+            className="text-xs bg-white px-0 min-w-0 border border-zinc-200 flex items-center justify-center w-10 h-10 rounded-xl hover:bg-[#f3af7f] hover:border-[#f3af7f] duration-150"
+          >
+            <FaArrowLeftLong />
+          </Button>
+        </div>
+        <div className="mt-10">
+          <h3 className="text-lg">Product not found</h3>
+        </div>
+      </div>
+    );
 
   return (
     <div>

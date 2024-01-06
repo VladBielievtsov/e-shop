@@ -13,7 +13,7 @@ export default function ProductCard({
   img,
   backImg,
   product,
-  panel,
+  panel = false,
 }: ProductCardProps) {
   return (
     <div className="productCard">

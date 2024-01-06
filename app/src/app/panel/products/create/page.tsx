@@ -6,6 +6,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Spinner } from "@nextui-org/react";
+import { useAppDispatch } from "@/lib/hooks";
+import { createProduct } from "@/lib/features/products/productsActions";
 
 type FormValues = {
   title: string;
@@ -23,43 +25,32 @@ export default function page() {
   } = useForm<FormValues>();
   const [isError, setIsError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
 
   const notifySuccess = () => toast.success("Product has beed created");
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsError("");
     setIsLoading(true);
-    await axios({
-      method: "post",
-      url: process.env.BACKEND_URL + "/product",
-      headers: {},
-      data: {
-        title: data.title,
-        description: data.description,
-        price: +data.price,
-        color: data.color,
-        discount: +data.discount,
-      },
-    })
-      .then(() => {
-        setIsLoading(false);
-        notifySuccess();
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        if (error.response) {
-          console.log(error.response.data.msg);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-          setIsError(error.response.data.msg);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
 
-        console.log(error.config);
-      });
+    const body = {
+      title: data.title,
+      description: data.description,
+      price: +data.price,
+      color: data.color,
+      discount: +data.discount,
+    };
+
+    const res = await dispatch(createProduct(body));
+
+    if (res.meta.requestStatus === "rejected") {
+      setIsLoading(false);
+      setIsError("Error: during creating product");
+      console.log("Error: during creating product");
+    } else {
+      setIsLoading(false);
+      notifySuccess();
+    }
   };
 
   return (
@@ -117,7 +108,7 @@ export default function page() {
           <h4 className="font-bold mt-10">Pricing:</h4>
           <div className="bg-white shadow-md p-4 rounded-xl mt-4 flex space-x-4">
             <Input
-              type="text"
+              type="number"
               variant="bordered"
               placeholder=" "
               label="Price"
@@ -126,7 +117,7 @@ export default function page() {
               {...register("price", { required: "Price is required" })}
             />
             <Input
-              type="text"
+              type="number"
               variant="bordered"
               defaultValue="0"
               label="Discount"

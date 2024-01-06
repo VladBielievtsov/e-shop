@@ -43,6 +43,7 @@ export default function LatestProducts() {
             data.map((product, idx) => (
               <SwiperSlide key={product.id} className="max-w-[338.5px]">
                 <ProductCard
+                  panel={false}
                   product={product}
                   img="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg"
                   backImg="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg"

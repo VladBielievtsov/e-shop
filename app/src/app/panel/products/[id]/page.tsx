@@ -1,16 +1,22 @@
 "use client";
 
+import { deleteProduct } from "@/lib/features/products/productsActions";
 import { IProduct } from "@/lib/features/products/productsSlice";
+import { useAppDispatch } from "@/lib/hooks";
 import { Button, Input, Textarea } from "@nextui-org/react";
 import axios from "axios";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function page() {
   const pathname = usePathname();
   const [product, setProduct] = useState<IProduct>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
   async function getProductById(id: string) {
     setIsLoading(true);
@@ -26,8 +32,16 @@ export default function page() {
     getProductById(pathname.split("/").slice(-1).join(""));
   }, []);
 
+  const deleteNotify = () => toast.success("Product has beed deleted");
+
   async function deleteHandler(id: number) {
-    await axios.delete(`${process.env.BACKEND_URL}/product/${id}`);
+    const res = await dispatch(deleteProduct({ id }));
+    if (res.meta.requestStatus === "rejected") {
+      console.log("Error: during deleting product");
+    } else {
+      deleteNotify();
+      router.push("/panel/products");
+    }
   }
 
   if (isLoading) return <h3>Loading...</h3>;
@@ -91,7 +105,7 @@ export default function page() {
         <h4 className="font-bold mt-10">Pricing:</h4>
         <div className="bg-white shadow-md p-4 rounded-xl mt-4 flex space-x-4">
           <Input
-            type="text"
+            type="number"
             variant="bordered"
             label="Price"
             defaultValue={String(product.price)}
@@ -99,7 +113,7 @@ export default function page() {
             className="max-w-[220px]"
           />
           <Input
-            type="text"
+            type="number"
             variant="bordered"
             label="Discount"
             defaultValue={String(product.discount)}

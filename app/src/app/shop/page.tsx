@@ -85,14 +85,17 @@ export default function Shop() {
         </div>
         <div className="w-full grid grid-cols-3 gap-6 pt-6 pl-20">
           {!!data &&
-            data.map((product, idx) => (
-              <ProductCard
-                product={product}
-                key={product.id}
-                img="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg"
-                backImg="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg"
-              />
-            ))}
+            [...data]
+              .reverse()
+              .map((product, idx) => (
+                <ProductCard
+                  panel={false}
+                  product={product}
+                  key={product.id}
+                  img="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg"
+                  backImg="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg"
+                />
+              ))}
         </div>
       </div>
     </div>
