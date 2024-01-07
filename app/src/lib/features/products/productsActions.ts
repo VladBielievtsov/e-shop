@@ -85,3 +85,43 @@ export const deleteProduct = createAsyncThunk<
     }
   }
 });
+
+export const updateProduct = createAsyncThunk<
+  IProduct,
+  {
+    id: number;
+    title: string;
+    description: string;
+    price: number;
+    color: string;
+    discount: number;
+  },
+  { rejectValue: SerializedError }
+>(
+  "products/update",
+  async (
+    { id, title, description, price, color, discount },
+    { rejectWithValue }
+  ) => {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.patch(
+        `${backendURL}/product/${id}`,
+        { title, description, price, color, discount },
+        config
+      );
+
+      return data;
+    } catch (error: any) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message);
+      } else {
+        return rejectWithValue(error.message);
+      }
+    }
+  }
+);

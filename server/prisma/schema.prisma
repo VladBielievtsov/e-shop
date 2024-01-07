@@ -42,8 +42,8 @@ model Product {
 model ProductSize {
   id        Int     @id @unique @default(autoincrement())
   productId Int
-  name      String
-  value     Int
+  size      String
+  quantity  Int
   Product   Product @relation(fields: [productId], references: [id])
 }
 

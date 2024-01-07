@@ -11,16 +11,20 @@ import {
   update,
 } from "./controllers/UserController";
 import {
-  addSizeToProduct,
   createProduct,
   deleteProduct,
-  getAllSizeById,
   getProductById,
   getProductBySlug,
   getProducts,
   getProductsByIds,
+  updateProduct,
 } from "./controllers/ProductController";
 import checkAuth from "./middleware/checkAuth";
+import {
+  addSizeToProduct,
+  deleteSizes,
+  getAllSizeById,
+} from "./controllers/SizeController";
 
 async function main() {
   const app = express();
@@ -48,6 +52,7 @@ async function main() {
 
   // PRODUCTS
   app.post("/product", createProduct);
+  app.patch("/product/:id", updateProduct);
   app.delete("/product/:id", deleteProduct);
   app.get("/products", getProducts);
   app.get("/product/:slug", getProductBySlug);
@@ -56,6 +61,7 @@ async function main() {
   // Sizes
   app.post("/size", addSizeToProduct);
   app.get("/sizes/:id", getAllSizeById);
+  app.delete("/sizes/:productId", deleteSizes);
 
   app.listen(PORT, () => {
     console.log(`Server is runing http://localhost:${PORT}`);

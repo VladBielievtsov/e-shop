@@ -28,7 +28,7 @@ export default function ProductAbout({ product, sizes }: ProductAboutProps) {
   const [isError, setIsError] = useState<string | undefined>();
   const dispatch = useAppDispatch();
 
-  const quantity = sizes?.reduce((acc, cur) => acc + cur.value, 0);
+  const quantity = sizes?.reduce((acc, cur) => acc + cur.quantity, 0);
 
   useEffect(() => {
     if (quantity && quantity < 10) {
@@ -112,9 +112,9 @@ export default function ProductAbout({ product, sizes }: ProductAboutProps) {
           {!!sizes &&
             sizes.map(
               (size) =>
-                !!size.value && (
-                  <CustomCheckbox value={size.name} key={size.id} large="true">
-                    {size.name}
+                !!size.quantity && (
+                  <CustomCheckbox value={size.size} key={size.id} large="true">
+                    {size.size}
                   </CustomCheckbox>
                 )
             )}

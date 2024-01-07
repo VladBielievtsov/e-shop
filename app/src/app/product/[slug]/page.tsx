@@ -14,8 +14,8 @@ import { Button } from "@nextui-org/react";
 export interface ISize {
   id: number;
   productId: number;
-  name: string;
-  value: number;
+  size: string;
+  quantity: number;
 }
 
 export default function ProductPage() {
@@ -38,6 +38,7 @@ export default function ProductPage() {
       .get(`${process.env.BACKEND_URL}/sizes/${id}`)
       .then((response) => {
         setSizes(response.data);
+        console.log(response);
       });
   }
 

@@ -103,14 +103,7 @@ export default function LoginForm({
               required: "Password Address is required",
             })}
           />
-          <div className="flex py-2 px-1 justify-between">
-            <Checkbox
-              classNames={{
-                label: "text-small",
-              }}
-            >
-              Remember me
-            </Checkbox>
+          <div className="flex py-2 px-1 justify-end">
             <Link color="primary" href="#" size="sm">
               Forgot password?
             </Link>

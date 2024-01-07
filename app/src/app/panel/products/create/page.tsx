@@ -3,11 +3,13 @@
 import React, { useState } from "react";
 import { Button, Input, Textarea } from "@nextui-org/react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { Spinner } from "@nextui-org/react";
 import { useAppDispatch } from "@/lib/hooks";
 import { createProduct } from "@/lib/features/products/productsActions";
+import { v4 as uuidv4 } from "uuid";
+import { createSize } from "@/lib/features/sizes/sizesActions";
+import { IoIosClose } from "react-icons/io";
 
 type FormValues = {
   title: string;
@@ -26,6 +28,9 @@ export default function page() {
   const [isError, setIsError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+  const [sizes, setSizes] = useState<
+    { id: string; productId: number; size: string; quantity: number }[]
+  >([]);
 
   const notifySuccess = () => toast.success("Product has beed created");
 
@@ -41,16 +46,40 @@ export default function page() {
       discount: +data.discount,
     };
 
-    const res = await dispatch(createProduct(body));
+    const resProduct = await dispatch(createProduct(body));
 
-    if (res.meta.requestStatus === "rejected") {
+    const resultArray = await sizes.map(({ id, ...rest }) => rest);
+    const updatedArray = await resultArray.map((item) => ({
+      ...item,
+      //@ts-ignore
+      productId: resProduct?.payload?.id,
+    }));
+
+    const resSizes = await dispatch(createSize(updatedArray));
+
+    if (resProduct.meta.requestStatus === "rejected") {
       setIsLoading(false);
       setIsError("Error: during creating product");
       console.log("Error: during creating product");
+    }
+
+    if (resSizes.meta.requestStatus === "rejected") {
+      setIsLoading(false);
+      setIsError("Error: during creating product, sizes");
+      console.log("Error: during creating product, sizes");
     } else {
       setIsLoading(false);
       notifySuccess();
     }
+  };
+
+  const test = () => {
+    const resultArray = sizes.map(({ id, ...rest }) => rest);
+    console.log(resultArray);
+  };
+
+  const removeSize = (id: string) => {
+    setSizes(sizes.filter((size) => size.id !== id));
   };
 
   return (
@@ -104,6 +133,56 @@ export default function page() {
                 {...register("color", { required: "Color is required" })}
               />
             </div>
+          </div>
+          <h4 className="font-bold mt-10">Quantity & Sizes:</h4>
+          <div className="bg-white shadow-md p-4 rounded-xl mt-4 space-y-4">
+            <Button
+              className="border border-zinc-300 mb-4"
+              onClick={() =>
+                setSizes((prev) => [
+                  ...prev,
+                  { id: uuidv4(), productId: 0, size: "", quantity: 0 },
+                ])
+              }
+            >
+              Add Size
+            </Button>
+            {sizes.map((size) => (
+              <div key={size.id} className="flex space-x-4 items-end">
+                <Input
+                  type="text"
+                  variant="bordered"
+                  label="Size"
+                  labelPlacement="outside"
+                  placeholder=" "
+                  required
+                  className="max-w-[220px]"
+                  onChange={(e) => (size.size = e.target.value)}
+                />
+                <Input
+                  type="text"
+                  variant="bordered"
+                  label="Quantity"
+                  labelPlacement="outside"
+                  placeholder=" "
+                  className="max-w-[220px]"
+                  onChange={(e) => (size.quantity = +e.target.value)}
+                />
+                <Button
+                  className="border border-zinc-300 p-0 w-10 h-10 min-w-0 text-2xl hover:bg-red-500"
+                  onClick={() => removeSize(size.id)}
+                >
+                  <IoIosClose />
+                </Button>
+              </div>
+            ))}
+            {/* <br />
+            <Button
+              className="border border-zinc-300 mb-4"
+              onClick={() => test()}
+            >
+              Get sizes
+            </Button> */}
           </div>
           <h4 className="font-bold mt-10">Pricing:</h4>
           <div className="bg-white shadow-md p-4 rounded-xl mt-4 flex space-x-4">

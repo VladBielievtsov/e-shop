@@ -3,6 +3,7 @@ import {
   fetchAllProducts,
   createProduct,
   deleteProduct,
+  updateProduct,
 } from "./productsActions";
 
 export interface IProduct {
@@ -54,6 +55,14 @@ const productsSlice = createSlice({
     // Delete product
     builder.addCase(deleteProduct.fulfilled, (state, { payload }) => {
       state.data = state.data?.filter((product) => product.id !== payload.id);
+    });
+    // Update product
+    builder.addCase(updateProduct.fulfilled, (state, { payload }) => {
+      const products = state.data?.filter(
+        (product) => product.id !== payload.id
+      );
+      products?.push(payload);
+      state.data = products;
     });
   },
 });
