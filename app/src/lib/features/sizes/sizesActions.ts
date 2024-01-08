@@ -31,6 +31,37 @@ export const createSize = createAsyncThunk<
   }
 });
 
+export const updateSizes = createAsyncThunk<
+  ISize,
+  {
+    productId: number;
+    quantity: number;
+    size: string;
+  }[],
+  { rejectValue: SerializedError }
+>("sizes/update", async (body, { rejectWithValue }) => {
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const { data } = await axios.patch(
+      `${backendURL}/sizes/${body[0].productId}`,
+      body,
+      config
+    );
+
+    return data;
+  } catch (error: any) {
+    if (error.response && error.response.data.message) {
+      return rejectWithValue(error.response.data.message);
+    } else {
+      return rejectWithValue(error.message);
+    }
+  }
+});
+
 export const deleteSizes = createAsyncThunk<
   ISize,
   { id: number },

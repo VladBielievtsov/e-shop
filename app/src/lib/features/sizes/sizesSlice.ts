@@ -1,5 +1,5 @@
 import { createSlice, SerializedError } from "@reduxjs/toolkit";
-import { createSize, deleteSizes } from "./sizesActions";
+import { createSize, deleteSizes, updateSizes } from "./sizesActions";
 
 export interface ISize {
   id: number;
@@ -34,6 +34,13 @@ const sizeSlice = createSlice({
       state.sizes = state.sizes?.filter(
         (size) => size.productId !== payload.productId
       );
+    });
+    // Update sizes
+    builder.addCase(updateSizes.fulfilled, (state, { payload }) => {
+      state.sizes = state.sizes?.filter(
+        (sizes) => sizes.productId !== payload.productId
+      );
+      state.sizes?.push(payload);
     });
   },
 });

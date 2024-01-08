@@ -73,11 +73,6 @@ export default function page() {
     }
   };
 
-  const test = () => {
-    const resultArray = sizes.map(({ id, ...rest }) => rest);
-    console.log(resultArray);
-  };
-
   const removeSize = (id: string) => {
     setSizes(sizes.filter((size) => size.id !== id));
   };
@@ -176,13 +171,6 @@ export default function page() {
                 </Button>
               </div>
             ))}
-            {/* <br />
-            <Button
-              className="border border-zinc-300 mb-4"
-              onClick={() => test()}
-            >
-              Get sizes
-            </Button> */}
           </div>
           <h4 className="font-bold mt-10">Pricing:</h4>
           <div className="bg-white shadow-md p-4 rounded-xl mt-4 flex space-x-4">

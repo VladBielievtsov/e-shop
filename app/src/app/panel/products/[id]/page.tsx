@@ -10,11 +10,13 @@ import { useAppDispatch } from "@/lib/hooks";
 import { Button, Input, Spinner, Textarea } from "@nextui-org/react";
 import axios from "axios";
 import Link from "next/link";
+import { v4 as uuidv4 } from "uuid";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { deleteSizes } from "@/lib/features/sizes/sizesActions";
+import { deleteSizes, updateSizes } from "@/lib/features/sizes/sizesActions";
+import { IoIosClose } from "react-icons/io";
 
 type FormValues = {
   title: string;
@@ -37,6 +39,9 @@ export default function page() {
   const [isLoadingUpdate, setIsLoadingUpdate] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [sizes, setSizes] = useState<
+    { id: string; productId: number; size: string; quantity: number }[]
+  >([]);
 
   async function getProductById(id: string) {
     setIsLoading(true);
@@ -44,6 +49,14 @@ export default function page() {
       .get(`${process.env.BACKEND_URL}/panel-product/${id}`)
       .then((response) => {
         setProduct(response.data);
+      });
+  }
+
+  async function getSizesById(id: number) {
+    await axios
+      .get(`${process.env.BACKEND_URL}/sizes/${id}`)
+      .then((response) => {
+        setSizes(response.data);
         setIsLoading(false);
       });
   }
@@ -51,6 +64,12 @@ export default function page() {
   useEffect(() => {
     getProductById(pathname.split("/").slice(-1).join(""));
   }, []);
+
+  useEffect(() => {
+    if (product?.id) {
+      getSizesById(product.id);
+    }
+  }, [product]);
 
   const deleteNotify = () => toast.success("Product has beed deleted");
 
@@ -87,9 +106,24 @@ export default function page() {
         discount: +data.discount,
       };
 
-      const res = await dispatch(updateProduct(body));
+      const resProduct = await dispatch(updateProduct(body));
 
-      if (res.meta.requestStatus === "rejected") {
+      const resultArray = await sizes.map(({ id, ...rest }) => rest);
+      const updatedArray = await resultArray.map((item) => ({
+        ...item,
+        //@ts-ignore
+        productId: resProduct?.payload?.id,
+      }));
+
+      const resSizes = await dispatch(updateSizes(updatedArray));
+
+      if (resProduct.meta.requestStatus === "rejected") {
+        setIsLoadingUpdate(false);
+        setIsError("Error: during updating product");
+        console.log("Error: during updating product");
+      }
+
+      if (resSizes.meta.requestStatus === "rejected") {
         setIsLoadingUpdate(false);
         setIsError("Error: during updating product");
         console.log("Error: during updating product");
@@ -98,6 +132,10 @@ export default function page() {
         updateNotify();
       }
     }
+  };
+
+  const removeSize = (id: string) => {
+    setSizes(sizes.filter((size) => size.id !== id));
   };
 
   if (isLoading) return <h3>Loading...</h3>;
@@ -166,6 +204,51 @@ export default function page() {
                 {...register("color", { required: "Color is required" })}
               />
             </div>
+          </div>
+          <h4 className="font-bold mt-10">Quantity & Sizes:</h4>
+          <div className="bg-white shadow-md p-4 rounded-xl mt-4 space-y-4">
+            <Button
+              className="border border-zinc-300 mb-4"
+              onClick={() =>
+                setSizes((prev) => [
+                  ...prev,
+                  { id: uuidv4(), productId: 0, size: "", quantity: 0 },
+                ])
+              }
+            >
+              Add Size
+            </Button>
+            {sizes.map((size) => (
+              <div key={size.id} className="flex space-x-4 items-end">
+                <Input
+                  type="text"
+                  variant="bordered"
+                  label="Size"
+                  labelPlacement="outside"
+                  placeholder=" "
+                  required
+                  defaultValue={size.size}
+                  className="max-w-[220px]"
+                  onChange={(e) => (size.size = e.target.value)}
+                />
+                <Input
+                  type="text"
+                  variant="bordered"
+                  label="Quantity"
+                  labelPlacement="outside"
+                  placeholder=" "
+                  defaultValue={String(size.quantity)}
+                  className="max-w-[220px]"
+                  onChange={(e) => (size.quantity = +e.target.value)}
+                />
+                <Button
+                  className="border border-zinc-300 p-0 w-10 h-10 min-w-0 text-2xl hover:bg-red-500"
+                  onClick={() => removeSize(size.id)}
+                >
+                  <IoIosClose />
+                </Button>
+              </div>
+            ))}
           </div>
           <h4 className="font-bold mt-10">Pricing:</h4>
           <div className="bg-white shadow-md p-4 rounded-xl mt-4 flex space-x-4">

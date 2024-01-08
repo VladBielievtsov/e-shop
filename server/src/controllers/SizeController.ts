@@ -41,6 +41,35 @@ export const addSizeToProduct = async (req: Request, res: Response) => {
   }
 };
 
+export const updateSizes = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    await prisma.productSize.deleteMany({
+      where: {
+        productId: +id,
+      },
+    });
+
+    await prisma.productSize.createMany({
+      data: req.body,
+    });
+
+    const productSizes = await prisma.productSize.findMany({
+      where: {
+        productId: req.body.productId,
+      },
+    });
+
+    res.json(productSizes);
+  } catch (err: any) {
+    console.error("Error during updating sizes:", err);
+    res.status(500).json({
+      msg: "Error during updating sizes",
+    });
+  }
+};
+
 export const getAllSizeById = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
