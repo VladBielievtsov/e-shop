@@ -25,18 +25,26 @@ model User {
 }
 
 model Product {
-  id          Int           @id @unique @default(autoincrement())
+  id          Int             @id @unique @default(autoincrement())
   title       String
   description String
+  images      ProductImages[]
   // category    Category @relation(fields: [category_id], references: [id])
   // category_id Int
-  slug        String        @unique
+  slug        String          @unique
   price       Float
   discount    Float?
   color       String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
   sizes       ProductSize[]
+}
+
+model ProductImages {
+  id        Int     @id @unique @default(autoincrement())
+  productId Int
+  Product   Product @relation(fields: [productId], references: [id])
+  url       String
 }
 
 model ProductSize {

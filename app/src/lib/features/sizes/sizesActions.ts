@@ -1,8 +1,6 @@
 import { SerializedError, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios from "@/utils/axios";
 import { ISize } from "./sizesSlice";
-
-const backendURL = process.env.BACKEND_URL || "http://localhost:4040";
 
 export const createSize = createAsyncThunk<
   ISize,
@@ -19,7 +17,7 @@ export const createSize = createAsyncThunk<
         "Content-Type": "application/json",
       },
     };
-    const { data } = await axios.post(`${backendURL}/size`, body, config);
+    const { data } = await axios.post(`/size`, body, config);
 
     return data;
   } catch (error: any) {
@@ -47,7 +45,7 @@ export const updateSizes = createAsyncThunk<
       },
     };
     const { data } = await axios.patch(
-      `${backendURL}/sizes/${body[0].productId}`,
+      `/sizes/${body[0].productId}`,
       body,
       config
     );
@@ -74,7 +72,7 @@ export const deleteSizes = createAsyncThunk<
       },
     };
 
-    const { data } = await axios.delete(`${backendURL}/sizes/${id}`, config);
+    const { data } = await axios.delete(`/sizes/${id}`, config);
 
     return data;
   } catch (error: any) {

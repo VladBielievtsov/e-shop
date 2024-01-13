@@ -98,9 +98,9 @@ export default function ProductAbout({ product, sizes }: ProductAboutProps) {
           ${product?.price}
         </p>
       )}
-      <div className="flex items-center space-x-4 mt-8">
+      {/* <div className="flex items-center space-x-4 mt-8">
         <SelectColor />
-      </div>
+      </div> */}
       <div className="mt-8">
         <h3 className="uppercase text-2xl font-bold">Select a size</h3>
         <CheckboxGroup

@@ -8,7 +8,7 @@ import {
 import { IProduct } from "@/lib/features/products/productsSlice";
 import { useAppDispatch } from "@/lib/hooks";
 import { Button, Input, Spinner, Textarea } from "@nextui-org/react";
-import axios from "axios";
+import axios from "@/utils/axios";
 import Link from "next/link";
 import { v4 as uuidv4 } from "uuid";
 import { usePathname } from "next/navigation";
@@ -45,20 +45,16 @@ export default function page() {
 
   async function getProductById(id: string) {
     setIsLoading(true);
-    await axios
-      .get(`${process.env.BACKEND_URL}/panel-product/${id}`)
-      .then((response) => {
-        setProduct(response.data);
-      });
+    await axios.get(`/panel-product/${id}`).then((response) => {
+      setProduct(response.data);
+    });
   }
 
   async function getSizesById(id: number) {
-    await axios
-      .get(`${process.env.BACKEND_URL}/sizes/${id}`)
-      .then((response) => {
-        setSizes(response.data);
-        setIsLoading(false);
-      });
+    await axios.get(`/sizes/${id}`).then((response) => {
+      setSizes(response.data);
+      setIsLoading(false);
+    });
   }
 
   useEffect(() => {

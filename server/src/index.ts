@@ -13,6 +13,7 @@ import {
 } from "./controllers/UserController";
 import {
   createProduct,
+  createProductImages,
   deleteProduct,
   getProductById,
   getProductBySlug,
@@ -36,7 +37,8 @@ async function main() {
       cb(null, "uploads");
     },
     filename: (_, file, cb) => {
-      cb(null, file.originalname);
+      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+      cb(null, uniqueSuffix + "-" + file.originalname);
     },
   });
 
@@ -61,10 +63,10 @@ async function main() {
   app.post("/upload", upload.single("image"), (req: Request, res: Response) => {
     try {
       if (!req.file) {
-        return res.json({ msg: "No file uploaded" });
+        return res.status(400).json({ msg: "No file uploaded" });
       }
       res.json({
-        url: `/uploads/${req.file.originalname}`,
+        url: `/uploads/${req.file.filename}`,
       });
     } catch (error: any) {
       console.error("Error during uploading image: " + error);
@@ -89,6 +91,10 @@ async function main() {
   app.get("/product/:slug", getProductBySlug);
   app.get("/panel-product/:id", getProductById);
   app.post("/favorites", getProductsByIds);
+
+  // Product Images
+  app.post("/product-images", createProductImages);
+
   // Sizes
   app.post("/size", addSizeToProduct);
   app.get("/sizes/:id", getAllSizeById);

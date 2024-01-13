@@ -148,3 +148,18 @@ export const getProductsByIds = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const createProductImages = async (req: Request, res: Response) => {
+  try {
+    const images = await prisma.productImages.createMany({
+      data: req.body,
+    });
+
+    res.json(images);
+  } catch (err: any) {
+    console.error("Error during creating images:", err);
+    res.status(500).json({
+      msg: "Error during creating images",
+    });
+  }
+};

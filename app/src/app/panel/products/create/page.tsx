@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Input, Textarea } from "@nextui-org/react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -10,6 +10,7 @@ import { createProduct } from "@/lib/features/products/productsActions";
 import { v4 as uuidv4 } from "uuid";
 import { createSize } from "@/lib/features/sizes/sizesActions";
 import { IoIosClose } from "react-icons/io";
+import axios from "@/utils/axios";
 
 type FormValues = {
   title: string;
@@ -17,6 +18,7 @@ type FormValues = {
   color: string;
   price: string;
   discount: string;
+  picture: FileList;
 };
 
 export default function page() {
@@ -37,7 +39,6 @@ export default function page() {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsError("");
     setIsLoading(true);
-
     const body = {
       title: data.title,
       description: data.description,
@@ -47,22 +48,44 @@ export default function page() {
     };
 
     const resProduct = await dispatch(createProduct(body));
-
     const resultArray = await sizes.map(({ id, ...rest }) => rest);
     const updatedArray = await resultArray.map((item) => ({
       ...item,
       //@ts-ignore
       productId: resProduct?.payload?.id,
     }));
-
     const resSizes = await dispatch(createSize(updatedArray));
+
+    const uploadPromises = [];
+
+    for (let i = 0; i < data.picture.length; i++) {
+      const formData = new FormData();
+      formData.append("image", data.picture[i]);
+
+      uploadPromises.push(
+        axios.post("/upload", formData, {
+          headers: {
+            "content-type": `multipart/form-data; boundary=image`,
+          },
+        })
+      );
+    }
+
+    const resImagesArray = await Promise.all(uploadPromises);
+
+    const imageUrls = resImagesArray.map((res) => ({
+      //@ts-ignore
+      productId: resProduct?.payload?.id,
+      url: res.data.url,
+    }));
+
+    const resProducImages = await axios.post("product-images", imageUrls);
 
     if (resProduct.meta.requestStatus === "rejected") {
       setIsLoading(false);
       setIsError("Error: during creating product");
       console.log("Error: during creating product");
     }
-
     if (resSizes.meta.requestStatus === "rejected") {
       setIsLoading(false);
       setIsError("Error: during creating product, sizes");
@@ -128,6 +151,17 @@ export default function page() {
                 {...register("color", { required: "Color is required" })}
               />
             </div>
+          </div>
+          <h4 className="font-bold mt-10">Images:</h4>
+          <div className="bg-white shadow-md p-4 rounded-xl mt-4 space-y-4">
+            <input
+              type="file"
+              multiple
+              accept=".png, .jpg, .jpeg"
+              {...register("picture", {
+                required: "Picture is required",
+              })}
+            />
           </div>
           <h4 className="font-bold mt-10">Quantity & Sizes:</h4>
           <div className="bg-white shadow-md p-4 rounded-xl mt-4 space-y-4">

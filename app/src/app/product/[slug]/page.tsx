@@ -7,7 +7,7 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import ProductInfo from "@/components/ProductInfo";
 import LatestProducts from "@/components/LatestProducts";
 import { usePathname, useRouter } from "next/navigation";
-import axios from "axios";
+import axios from "@/utils/axios";
 import { IProduct } from "@/lib/features/products/productsSlice";
 import { Button } from "@nextui-org/react";
 
@@ -27,19 +27,17 @@ export default function ProductPage() {
 
   async function getProductBySlug(slug: string) {
     setIsLoading(true);
-    await axios.get(`${process.env.BACKEND_URL}${slug}`).then((response) => {
+    await axios.get(`${slug}`).then((response) => {
       setProduct(response.data);
       setIsLoading(false);
     });
   }
 
   async function getAllSizesById(id: number) {
-    await axios
-      .get(`${process.env.BACKEND_URL}/sizes/${id}`)
-      .then((response) => {
-        setSizes(response.data);
-        console.log(response);
-      });
+    await axios.get(`/sizes/${id}`).then((response) => {
+      setSizes(response.data);
+      console.log(response);
+    });
   }
 
   useEffect(() => {

@@ -3,7 +3,7 @@
 import ProductCard from "@/components/ProductCard";
 import SkeletonCard from "@/components/SkeletonCard";
 import { IProduct } from "@/lib/features/products/productsSlice";
-import axios from "axios";
+import axios from "@/utils/axios";
 import React, { useEffect, useState } from "react";
 
 export default function WishList() {
@@ -13,7 +13,7 @@ export default function WishList() {
   async function getProductsByIds() {
     await axios({
       method: "post",
-      url: `${process.env.BACKEND_URL}/favorites`,
+      url: `/favorites`,
       data: {
         indexes: fav,
       },
@@ -34,6 +34,7 @@ export default function WishList() {
           favorites ? (
             favorites?.map((product, idx) => (
               <ProductCard
+                panel={false}
                 key={product.id}
                 product={product}
                 img="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg"

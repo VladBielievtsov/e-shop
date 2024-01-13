@@ -1,9 +1,7 @@
 import { setCookie } from "cookies-next";
 import { SerializedError, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios from "@/utils/axios";
 import { UserInfo } from "./authSlice";
-
-const backendURL = process.env.BACKEND_URL || "http://localhost:4040";
 
 export const authLogin = createAsyncThunk<
   void,
@@ -16,11 +14,7 @@ export const authLogin = createAsyncThunk<
         "Content-Type": "application/json",
       },
     };
-    const { data } = await axios.post(
-      `${backendURL}/login`,
-      { email, password },
-      config
-    );
+    const { data } = await axios.post(`/login`, { email, password }, config);
     setCookie("token", data.token);
     return data;
   } catch (error: any) {
@@ -52,7 +46,7 @@ export const profileUpdate = createAsyncThunk<
     try {
       const { data } = await axios({
         method: "patch",
-        url: process.env.BACKEND_URL + "/update",
+        url: "/update",
         headers: {
           "Content-Type": "application/json",
         },

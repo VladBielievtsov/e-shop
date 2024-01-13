@@ -14,7 +14,6 @@ import {
 } from "@nextui-org/react";
 import { UserInfo } from "@/lib/features/auth/authSlice";
 import { SubmitHandler, useForm } from "react-hook-form";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { RootState } from "@/lib/store";

@@ -1,19 +1,15 @@
 import { SerializedError, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios from "@/utils/axios";
 import { IProduct } from "./productsSlice";
-
-const backendURL = process.env.BACKEND_URL || "http://localhost:4040";
 
 export const fetchAllProducts = createAsyncThunk<
   IProduct[],
   { rejectValue: SerializedError }
 >("products/fetchAllProducts", async (_, { rejectWithValue }) => {
   try {
-    const data = await fetch(`${backendURL}/products`, {
-      method: "GET",
-    });
+    const { data } = await axios.get(`/products`);
 
-    return data.json();
+    return data;
   } catch (error: any) {
     if (error.response && error.response.data.message) {
       return rejectWithValue(error.response.data.message);
@@ -46,7 +42,7 @@ export const createProduct = createAsyncThunk<
         },
       };
       const { data } = await axios.post(
-        `${backendURL}/product`,
+        `/product`,
         { title, description, price, color, discount },
         config
       );
@@ -74,7 +70,7 @@ export const deleteProduct = createAsyncThunk<
       },
     };
 
-    const { data } = await axios.delete(`${backendURL}/product/${id}`, config);
+    const { data } = await axios.delete(`/product/${id}`, config);
 
     return data;
   } catch (error: any) {
@@ -110,7 +106,7 @@ export const updateProduct = createAsyncThunk<
         },
       };
       const { data } = await axios.patch(
-        `${backendURL}/product/${id}`,
+        `/product/${id}`,
         { title, description, price, color, discount },
         config
       );

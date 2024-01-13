@@ -136,11 +136,15 @@ export default function Header() {
 
                 <Dropdown>
                   <DropdownTrigger>
-                    <Avatar
-                      src="https://i.pravatar.cc/150?u=a04258a2462d826712d"
+                    {/* <Avatar
+                      showFallback
+                      src=""
                       size="md"
                       className="cursor-pointer rounded-xl"
-                    />
+                    /> */}
+                    <Button className="bg-white min-w-0 p-0 border border-yellow-400 flex items-center justify-center w-10 h-10 rounded-xl hover:bg-yellow-300 hover:border-yellow-300 duration-150">
+                      <BsPerson />
+                    </Button>
                   </DropdownTrigger>
                   <DropdownMenu aria-label="Action event example">
                     <DropdownItem key="profile">
