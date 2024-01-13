@@ -1,8 +1,9 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import cors from "cors";
+import multer from "multer";
 import {
   getMe,
   login,
@@ -29,6 +30,18 @@ import {
 
 async function main() {
   const app = express();
+
+  const storage = multer.diskStorage({
+    destination: (_, __, cb) => {
+      cb(null, "uploads");
+    },
+    filename: (_, file, cb) => {
+      cb(null, file.originalname);
+    },
+  });
+
+  const upload = multer({ storage });
+
   app.use(express.json());
   app.use(
     cors({
@@ -36,12 +49,29 @@ async function main() {
       credentials: true,
     })
   );
+  app.use("/uploads", express.static("uploads"));
   app.use(cookieParser("secret key"));
 
   const PORT = process.env.PORT || 4040;
 
   app.get("/", (req, res) => {
     res.json("Api for Shop-App");
+  });
+
+  app.post("/upload", upload.single("image"), (req: Request, res: Response) => {
+    try {
+      if (!req.file) {
+        return res.json({ msg: "No file uploaded" });
+      }
+      res.json({
+        url: `/uploads/${req.file.originalname}`,
+      });
+    } catch (error: any) {
+      console.error("Error during uploading image: " + error);
+      res.status(500).json({
+        msg: "Error during uploading image",
+      });
+    }
   });
 
   // USER
