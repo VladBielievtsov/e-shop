@@ -1,6 +1,6 @@
 import { createSlice, SerializedError } from "@reduxjs/toolkit";
 import { getCookie, hasCookie, deleteCookie } from "cookies-next";
-import { authLogin } from "./authActions";
+import { authLogin, profileUpdate } from "./authActions";
 
 export interface UserInfo {
   id: number;
@@ -67,6 +67,11 @@ const authSlice = createSlice({
     builder.addCase(authLogin.rejected, (state, { payload }) => {
       state.loading = false;
       state.error = payload;
+    });
+    // Update profile
+    builder.addCase(profileUpdate.fulfilled, (state, { payload }) => {
+      // @ts-ignore
+      state.userInfo = payload;
     });
   },
 });

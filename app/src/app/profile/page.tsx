@@ -15,7 +15,6 @@ import { RootState } from "@/lib/store";
 import { useDisclosure } from "@nextui-org/react";
 import EditAccountModal from "@/components/EditAccountModal";
 import { LiaEdit } from "react-icons/lia";
-import { UserInfo } from "@/lib/features/auth/authSlice";
 
 export default function page() {
   const { userInfo } = useAppSelector((state: RootState) => state.auth);

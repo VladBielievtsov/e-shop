@@ -16,8 +16,9 @@ import { UserInfo } from "@/lib/features/auth/authSlice";
 import { SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useAppSelector } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { RootState } from "@/lib/store";
+import { profileUpdate } from "@/lib/features/auth/authActions";
 
 interface EditAccountModal {
   isOpen: boolean;
@@ -47,43 +48,35 @@ export default function EditAccountModal({
     formState: { errors },
   } = useForm<FormValues>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<string>();
+
+  const dispatch = useAppDispatch();
 
   const notifySuccess = () => toast.success("Account has beed updated");
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsLoading(true);
-    await axios({
-      method: "patch",
-      url: process.env.BACKEND_URL + "/update",
-      headers: {},
-      withCredentials: true,
-      data: {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        region: data.region,
-        city: data.city,
-        postOffice: data.postOffice,
-      },
-    })
-      .then((res) => {
-        setIsLoading(false);
-        notifySuccess();
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        if (error.response) {
-          console.log(error.response.data.msg);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
+    setIsError("");
 
-        console.log(error.config);
-      });
+    const body = {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      region: data.region,
+      city: data.city,
+      postOffice: data.postOffice,
+    };
+
+    const resUser = await dispatch(profileUpdate(body));
+
+    if (resUser.meta.requestStatus === "rejected") {
+      setIsLoading(false);
+      setIsError("Error: during updating product");
+      console.log("Error: during updating product");
+    } else {
+      setIsLoading(false);
+      notifySuccess();
+    }
   };
 
   return (
@@ -95,6 +88,7 @@ export default function EditAccountModal({
               Edit details
             </ModalHeader>
             <form onSubmit={handleSubmit(onSubmit)}>
+              {!!isError && <p className="text-red-500">{isError}</p>}
               <ModalBody>
                 <Input
                   autoFocus
