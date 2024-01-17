@@ -1,5 +1,10 @@
 import { createSlice, SerializedError } from "@reduxjs/toolkit";
-import { createSize, deleteSizes, updateSizes } from "./sizesActions";
+import {
+  createSize,
+  deleteSizes,
+  getAllSizes,
+  updateSizes,
+} from "./sizesActions";
 
 export interface ISize {
   id: number;
@@ -15,7 +20,7 @@ export interface SizesState {
 }
 
 const initialState: SizesState = {
-  sizes: [],
+  sizes: null,
   status: "idle",
   error: null,
 };
@@ -25,6 +30,21 @@ const sizeSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers(builder) {
+    // Get all sizes
+    builder.addCase(getAllSizes.pending, (state) => {
+      state.status = "loading";
+      state.error = null;
+    });
+    builder.addCase(getAllSizes.fulfilled, (state, { payload }) => {
+      state.status = "succeeded";
+      state.error = null;
+      state.sizes = payload;
+    });
+    builder.addCase(getAllSizes.rejected, (state, { payload }) => {
+      state.status = "failed";
+      // @ts-ignore
+      state.error = payload;
+    });
     // Create sizes
     builder.addCase(createSize.fulfilled, (state, { payload }) => {
       state.sizes?.push(payload);

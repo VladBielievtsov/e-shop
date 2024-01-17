@@ -26,6 +26,7 @@ import {
   addSizeToProduct,
   deleteSizes,
   getAllSizeById,
+  getAllSizes,
   updateSizes,
 } from "./controllers/SizeController";
 
@@ -96,6 +97,7 @@ async function main() {
   app.post("/product-images", createProductImages);
 
   // Sizes
+  app.get("/sizes", getAllSizes);
   app.post("/size", addSizeToProduct);
   app.get("/sizes/:id", getAllSizeById);
   app.patch("/sizes/:id", updateSizes);

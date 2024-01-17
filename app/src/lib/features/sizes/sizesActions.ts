@@ -2,6 +2,23 @@ import { SerializedError, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "@/utils/axios";
 import { ISize } from "./sizesSlice";
 
+export const getAllSizes = createAsyncThunk<
+  ISize[],
+  { rejectValue: SerializedError }
+>("sizes/getAllSizes", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.get(`/sizes`);
+
+    return data;
+  } catch (error: any) {
+    if (error.response && error.response.data.message) {
+      return rejectWithValue(error.response.data.message);
+    } else {
+      return rejectWithValue(error.message);
+    }
+  }
+});
+
 export const createSize = createAsyncThunk<
   ISize,
   {

@@ -2,26 +2,21 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+export const getAllSizes = async (req: Request, res: Response) => {
+  try {
+    const sizes = await prisma.productSize.findMany();
+
+    res.json(sizes);
+  } catch (err: any) {
+    console.error("Error during getting all sizes:", err);
+    res.status(500).json({
+      msg: "Error during getting all sizes",
+    });
+  }
+};
+
 export const addSizeToProduct = async (req: Request, res: Response) => {
   try {
-    // [
-    //   {
-    //     "productId": 12,
-    //     "size": "x",
-    //     "quantity": 5
-    //   },
-    //   {
-    //     "productId": 12,
-    //     "size": "l",
-    //     "quantity": 5
-    //   },
-    //   {
-    //     "productId": 12,
-    //     "size": "m",
-    //     "quantity": 5
-    //   }
-    // ]
-
     await prisma.productSize.createMany({
       data: req.body,
     });

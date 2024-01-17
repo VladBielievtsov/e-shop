@@ -11,10 +11,25 @@ import {
 } from "@nextui-org/react";
 
 import { CustomCheckbox } from "./CustomCheckbox";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { RootState } from "@/lib/store";
+import { getAllSizes } from "@/lib/features/sizes/sizesActions";
 
 export default function Filters() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const dispatch = useAppDispatch();
+
+  const sizesStatus = useAppSelector((state: RootState) => state.sizes.status);
+
+  let { sizes } = useAppSelector((state: RootState) => state.sizes);
+
+  useEffect(() => {
+    if (sizesStatus === "idle") {
+      // @ts-ignore
+      dispatch(getAllSizes());
+    }
+  }, [sizesStatus, dispatch]);
 
   const [categorySelected, setCategorySelected] = useState<string[]>(
     searchParams.getAll("category") ? searchParams.getAll("category") : []
@@ -24,19 +39,6 @@ export default function Filters() {
   const [sizeSelected, setSizeSelected] = useState<string[]>(
     searchParams.getAll("sizes") ? searchParams.getAll("sizes") : []
   );
-
-  const sizes = [
-    "xxxs",
-    "xxs",
-    "xs",
-    "s",
-    "m",
-    "l",
-    "xl",
-    "xxl",
-    "xxxl",
-    "xxxxl",
-  ];
 
   const [price, setPrice] = useState<number[]>([
     searchParams.get("priceFrom")
@@ -111,11 +113,12 @@ export default function Filters() {
               value={sizeSelected}
               onValueChange={setSizeSelected}
             >
-              {sizes.map((categorym, idx) => (
-                <CustomCheckbox value={categorym} key={idx}>
-                  {categorym}
-                </CustomCheckbox>
-              ))}
+              {!!sizes &&
+                sizes.map((size, idx) => (
+                  <CustomCheckbox value={size.size} key={idx}>
+                    {size.size}
+                  </CustomCheckbox>
+                ))}
             </CheckboxGroup>
           </div>
         </AccordionItem>

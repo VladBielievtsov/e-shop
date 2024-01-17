@@ -31,10 +31,6 @@ export default function Shop() {
     if (productsStatus === "idle") {
       // @ts-ignore
       dispatch(fetchAllProducts());
-    } else if (productsStatus === "loading") {
-      // setIsLoading(true);
-    } else {
-      // setIsLoading(false);
     }
   }, [productsStatus, dispatch]);
 

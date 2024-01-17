@@ -1,6 +1,6 @@
 import { SerializedError, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "@/utils/axios";
-import { IProduct, IProductImages } from "./productsSlice";
+import { IProduct } from "./productsSlice";
 
 export const fetchAllProducts = createAsyncThunk<
   IProduct[],
