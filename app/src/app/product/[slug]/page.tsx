@@ -36,7 +36,6 @@ export default function ProductPage() {
   async function getAllSizesById(id: number) {
     await axios.get(`/sizes/${id}`).then((response) => {
       setSizes(response.data);
-      console.log(response);
     });
   }
 
@@ -75,10 +74,10 @@ export default function ProductPage() {
           <FaArrowLeftLong />
         </Button>
       </div>
-      <div className="flex pt-10 min-h-[700px]">
+      <div className="flex pt-10 min-h-[700px] max-w-[1250px] mx-auto">
         <div className="w-1/2">
           {!isLoading ? (
-            <ProductSlider color={product?.color} />
+            <ProductSlider color={product?.color} images={product.images} />
           ) : (
             <h3>Loading...</h3>
           )}

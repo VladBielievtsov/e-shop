@@ -7,50 +7,19 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import ProductColor from "./ProductColor";
+import { IProductImages } from "@/lib/features/products/productsSlice";
 
 interface ProductSliderProps {
   color: string | undefined;
+  images: IProductImages[];
 }
 
-export default function ProductSlider({ color }: ProductSliderProps) {
+export default function ProductSlider({ color, images }: ProductSliderProps) {
   const [thumbsSwiper, setThumbsSwiper] = useState<null | boolean>(null);
 
-  const images = [
-    "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg",
-    "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg",
-    "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg",
-    "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg",
-    "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg",
-    "https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg",
-  ];
-
   return (
-    <div className="w-full flex items-center">
-      <div className="w-[100px] block">
-        <Swiper
-          allowTouchMove={false}
-          modules={[Thumbs]}
-          grabCursor
-          spaceBetween={0}
-          slidesPerView={4}
-          watchSlidesProgress
-          // @ts-ignore
-          onSwiper={setThumbsSwiper}
-          direction="vertical"
-          className="w-full overflow-hidden relative h-[536.88px]"
-        >
-          {images.map((img, idx) => (
-            <SwiperSlide key={idx}>
-              <img
-                src={img}
-                alt="alt"
-                className="block aspect-[9/11] rounded-[30px] mb-[12px]"
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
-      <div className="w-[calc(100%-100px)] pl-[12px] max-w-full flex flex-col">
+    <div className="w-full">
+      <div className="w-full pl-[12px] max-w-full flex flex-col">
         <Swiper
           spaceBetween={0}
           slidesPerView={1}
@@ -73,11 +42,15 @@ export default function ProductSlider({ color }: ProductSliderProps) {
 
           {images.map((img, idx) => (
             <SwiperSlide key={idx}>
-              <img src={img} alt="alt" className="block aspect-[9/11]" />
+              <img
+                src={process.env.BACKEND_URL + img.url}
+                alt="alt"
+                className="block aspect-[9/11] object-cover"
+              />
             </SwiperSlide>
           ))}
         </Swiper>
-        <div className="inline-flex mx-auto rounded-full bg-[#fff] p-2 -mt-[28px] relative z-10">
+        <div className="inline-flex mx-auto rounded-full bg-[#fff] p-2 -mt-[28px] relative z-10 object-cover">
           <svg
             width="20"
             height="20"
@@ -129,6 +102,28 @@ export default function ProductSlider({ color }: ProductSliderProps) {
             </defs>
           </svg>
         </div>
+      </div>
+      <div className="w-full block">
+        <Swiper
+          modules={[Thumbs]}
+          grabCursor
+          spaceBetween={20}
+          slidesPerView={4}
+          watchSlidesProgress
+          // @ts-ignore
+          onSwiper={setThumbsSwiper}
+          className="w-full overflow-hidden relative"
+        >
+          {images.map((img, idx) => (
+            <SwiperSlide key={idx}>
+              <img
+                src={process.env.BACKEND_URL + img.url}
+                alt="alt"
+                className="block aspect-[9/11] rounded-[30px] mb-[12px] object-cover"
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
     </div>
   );

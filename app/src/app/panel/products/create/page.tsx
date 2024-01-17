@@ -10,6 +10,7 @@ import { createProduct } from "@/lib/features/products/productsActions";
 import { v4 as uuidv4 } from "uuid";
 import { createSize } from "@/lib/features/sizes/sizesActions";
 import { IoIosClose } from "react-icons/io";
+import { LuImagePlus } from "react-icons/lu";
 import axios from "@/utils/axios";
 
 type FormValues = {
@@ -33,6 +34,11 @@ export default function page() {
   const [sizes, setSizes] = useState<
     { id: string; productId: number; size: string; quantity: number }[]
   >([]);
+  const [files, setFiles] = useState<FileList | null>();
+
+  const imagesOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFiles(e.target.files);
+  };
 
   const notifySuccess = () => toast.success("Product has beed created");
 
@@ -73,8 +79,8 @@ export default function page() {
 
     const resImagesArray = await Promise.all(uploadPromises);
 
-    const imageUrls = resImagesArray.map((res) => ({
-      //@ts-ignore
+    const imageUrls = await resImagesArray.map((res) => ({
+      // @ts-ignore
       productId: resProduct?.payload?.id,
       url: res.data.url,
     }));
@@ -153,15 +159,30 @@ export default function page() {
             </div>
           </div>
           <h4 className="font-bold mt-10">Images:</h4>
-          <div className="bg-white shadow-md p-4 rounded-xl mt-4 space-y-4">
-            <input
-              type="file"
-              multiple
-              accept=".png, .jpg, .jpeg"
-              {...register("picture", {
-                required: "Picture is required",
-              })}
-            />
+          <div className="bg-white shadow-md p-4 rounded-xl mt-4 flex gap-3 flex-wrap">
+            <label className="text-6xl flex flex-col items-center justify-center w-[200px] h-[200px] border-medium hover:border-default-400 border-default-200 duration-150 rounded-medium border-dashed cursor-pointer">
+              <LuImagePlus />
+              <p className="text-base">Upload images</p>
+              <input
+                className="w-0 h-0 opacity-0"
+                type="file"
+                multiple
+                accept=".png, .jpg, .jpeg"
+                {...register("picture", {
+                  required: "Picture is required",
+                })}
+                onChange={(e) => imagesOnChange(e)}
+              />
+            </label>
+            {!!files &&
+              Array.from(files).map((file, id) => (
+                <img
+                  key={id}
+                  className="w-[200px] h-[200px] rounded-medium object-cover"
+                  src={URL.createObjectURL(file)}
+                  alt="img"
+                />
+              ))}
           </div>
           <h4 className="font-bold mt-10">Quantity & Sizes:</h4>
           <div className="bg-white shadow-md p-4 rounded-xl mt-4 space-y-4">

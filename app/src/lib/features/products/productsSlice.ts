@@ -14,6 +14,13 @@ export interface IProduct {
   slug: string;
   price: number;
   discount: number;
+  images: IProductImages[];
+}
+
+export interface IProductImages {
+  id: number;
+  productId: number;
+  url: string;
 }
 
 export interface ProductsState {

@@ -3,15 +3,11 @@ import Link from "next/link";
 import React from "react";
 
 interface ProductCardProps {
-  img: string;
-  backImg: string;
   product: IProduct;
   panel: boolean;
 }
 
 export default function ProductCard({
-  img,
-  backImg,
   product,
   panel = false,
 }: ProductCardProps) {
@@ -27,12 +23,12 @@ export default function ProductCard({
           className="block rounded-[50px] overflow-hidden relative aspect-[9/11]"
         >
           <img
-            src={backImg}
+            src={process.env.BACKEND_URL + product.images[1].url}
             alt="alt"
             className="absolute h-full object-cover"
           />
           <img
-            src={img}
+            src={process.env.BACKEND_URL + product.images[0].url}
             alt="alt"
             className="absolute h-full object-cover productCard__hide"
           />

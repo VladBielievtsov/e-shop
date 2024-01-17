@@ -1,6 +1,6 @@
 import { SerializedError, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "@/utils/axios";
-import { IProduct } from "./productsSlice";
+import { IProduct, IProductImages } from "./productsSlice";
 
 export const fetchAllProducts = createAsyncThunk<
   IProduct[],
@@ -91,12 +91,13 @@ export const updateProduct = createAsyncThunk<
     price: number;
     color: string;
     discount: number;
+    images: { productId: number; url: any }[];
   },
   { rejectValue: SerializedError }
 >(
   "products/update",
   async (
-    { id, title, description, price, color, discount },
+    { id, title, description, price, color, discount, images },
     { rejectWithValue }
   ) => {
     try {
@@ -107,7 +108,7 @@ export const updateProduct = createAsyncThunk<
       };
       const { data } = await axios.patch(
         `/product/${id}`,
-        { title, description, price, color, discount },
+        { title, description, price, color, discount, images },
         config
       );
 

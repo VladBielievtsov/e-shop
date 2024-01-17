@@ -44,7 +44,6 @@ export default function Shop() {
         product.price > parseInt(searchParams.get("priceFrom")!) &&
           product.price < parseInt(searchParams.get("priceTo")!);
       });
-      console.log(data);
     }
   });
 
@@ -87,14 +86,8 @@ export default function Shop() {
           {!!data &&
             [...data]
               .reverse()
-              .map((product, idx) => (
-                <ProductCard
-                  panel={false}
-                  product={product}
-                  key={product.id}
-                  img="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg"
-                  backImg="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg"
-                />
+              .map((product) => (
+                <ProductCard panel={false} product={product} key={product.id} />
               ))}
         </div>
       </div>

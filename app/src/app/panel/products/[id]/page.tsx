@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { deleteSizes, updateSizes } from "@/lib/features/sizes/sizesActions";
 import { IoIosClose } from "react-icons/io";
+import { LuImagePlus } from "react-icons/lu";
 
 type FormValues = {
   title: string;
@@ -24,6 +25,7 @@ type FormValues = {
   color: string;
   price: string;
   discount: string;
+  picture: FileList;
 };
 
 export default function page() {
@@ -42,6 +44,11 @@ export default function page() {
   const [sizes, setSizes] = useState<
     { id: string; productId: number; size: string; quantity: number }[]
   >([]);
+  const [files, setFiles] = useState<FileList | null>();
+
+  const imagesOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFiles(e.target.files);
+  };
 
   async function getProductById(id: string) {
     setIsLoading(true);
@@ -64,19 +71,14 @@ export default function page() {
   useEffect(() => {
     if (product?.id) {
       getSizesById(product.id);
+      console.log(product);
     }
   }, [product]);
 
   const deleteNotify = () => toast.success("Product has beed deleted");
 
   async function deleteHandler(id: number) {
-    const resSizes = await dispatch(deleteSizes({ id }));
-
     const resProducts = await dispatch(deleteProduct({ id }));
-
-    if (resSizes.meta.requestStatus === "rejected") {
-      console.log("Error: during deleting product");
-    }
 
     if (resProducts.meta.requestStatus === "rejected") {
       console.log("Error: during deleting product");
@@ -93,6 +95,29 @@ export default function page() {
     if (product?.id) {
       setIsLoadingUpdate(true);
 
+      const uploadPromises = [];
+
+      for (let i = 0; i < data.picture.length; i++) {
+        const formData = new FormData();
+        formData.append("image", data.picture[i]);
+
+        uploadPromises.push(
+          axios.post("/upload", formData, {
+            headers: {
+              "content-type": `multipart/form-data; boundary=image`,
+            },
+          })
+        );
+      }
+
+      const resImagesArray = await Promise.all(uploadPromises);
+
+      const imageUrls = await resImagesArray.map((res) => ({
+        // @ts-ignore
+        productId: product.id,
+        url: res.data.url,
+      }));
+
       const body = {
         id: product.id,
         title: data.title,
@@ -100,6 +125,7 @@ export default function page() {
         price: +data.price,
         color: data.color,
         discount: +data.discount,
+        images: imageUrls,
       };
 
       const resProduct = await dispatch(updateProduct(body));
@@ -200,6 +226,40 @@ export default function page() {
                 {...register("color", { required: "Color is required" })}
               />
             </div>
+          </div>
+          <h4 className="font-bold mt-10">Images:</h4>
+          <div className="bg-white shadow-md p-4 rounded-xl mt-4 flex gap-3 flex-wrap">
+            <label className="text-6xl flex flex-col items-center justify-center w-[200px] h-[200px] border-medium hover:border-default-400 border-default-200 duration-150 rounded-medium border-dashed cursor-pointer">
+              <LuImagePlus />
+              <p className="text-base">Upload images</p>
+              <input
+                className="w-0 h-0 opacity-0"
+                type="file"
+                multiple
+                accept=".png, .jpg, .jpeg"
+                {...register("picture")}
+                onChange={(e) => imagesOnChange(e)}
+              />
+            </label>
+            {files?.length
+              ? Array.from(files).map((file, id) => (
+                  <img
+                    key={id}
+                    className="w-[200px] h-[200px] rounded-medium object-cover"
+                    src={URL.createObjectURL(file)}
+                    alt="img"
+                  />
+                ))
+              : product.images &&
+                product.images.length > 0 &&
+                product.images.map((img, id) => (
+                  <img
+                    key={id}
+                    className="w-[200px] h-[200px] rounded-medium object-cover"
+                    src={process.env.BACKEND_URL + img.url}
+                    alt="img"
+                  />
+                ))}
           </div>
           <h4 className="font-bold mt-10">Quantity & Sizes:</h4>
           <div className="bg-white shadow-md p-4 rounded-xl mt-4 space-y-4">

@@ -33,7 +33,7 @@ export const createProduct = async (req: Request, res: Response) => {
 export const updateProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { title, description, price, color, discount } = req.body;
+    const { title, description, price, color, discount, images } = req.body;
     const slug = title.split(" ").join("-").toLowerCase();
 
     const product = await prisma.product.update({
@@ -50,6 +50,18 @@ export const updateProduct = async (req: Request, res: Response) => {
       },
     });
 
+    if (images[0]) {
+      await prisma.productImages.deleteMany({
+        where: {
+          productId: +product.id,
+        },
+      });
+
+      await prisma.productImages.createMany({
+        data: images,
+      });
+    }
+
     res.json(product);
   } catch (err: any) {
     console.error("Error during updating product:", err);
@@ -62,6 +74,18 @@ export const updateProduct = async (req: Request, res: Response) => {
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+
+    await prisma.productSize.deleteMany({
+      where: {
+        productId: +id,
+      },
+    });
+
+    await prisma.productImages.deleteMany({
+      where: {
+        productId: +id,
+      },
+    });
 
     const product = await prisma.product.delete({
       where: {
@@ -82,7 +106,17 @@ export const getProducts = async (req: Request, res: Response) => {
   try {
     const products = await prisma.product.findMany();
 
-    res.json(products);
+    const images = await prisma.productImages.findMany();
+
+    const mergedProducts = products.map((prod) => {
+      const productImages = images.filter((img) => img.productId === prod.id);
+      return {
+        ...prod,
+        images: productImages,
+      };
+    });
+
+    res.json(mergedProducts);
   } catch (err: any) {
     console.error("Error during getting products:", err);
     res.status(500).json({
@@ -100,7 +134,16 @@ export const getProductBySlug = async (req: Request, res: Response) => {
       },
     });
 
-    res.json(product);
+    const images = await prisma.productImages.findMany({
+      where: {
+        productId: product?.id,
+      },
+    });
+
+    res.json({
+      ...product,
+      images: images,
+    });
   } catch (err: any) {
     console.error("Error during getting product by slug:", err);
     res.status(500).json({
@@ -118,7 +161,16 @@ export const getProductById = async (req: Request, res: Response) => {
       },
     });
 
-    res.json(product);
+    const images = await prisma.productImages.findMany({
+      where: {
+        productId: product?.id,
+      },
+    });
+
+    res.json({
+      ...product,
+      images: images,
+    });
   } catch (err: any) {
     console.error("Error during getting product by id:", err);
     res.status(500).json({
