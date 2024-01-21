@@ -32,6 +32,7 @@ import {
 import {
   createCotegory,
   deleteCotegory,
+  updateCotegory,
 } from "./controllers/CategoriesController";
 
 async function main() {
@@ -100,6 +101,7 @@ async function main() {
   //Categories
   app.post("/category", createCotegory);
   app.delete("/category/:id", deleteCotegory);
+  app.patch("/category/:id", updateCotegory);
 
   // Product Images
   app.post("/product-images", createProductImages);

@@ -39,3 +39,27 @@ export const deleteCotegory = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const updateCotegory = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const { name } = req.body;
+
+    const category = await prisma.category.update({
+      where: {
+        id: +id,
+      },
+      data: {
+        name,
+      },
+    });
+
+    res.json(category);
+  } catch (err: any) {
+    console.error("Error during deleting category:", err);
+    res.status(500).json({
+      msg: "Error during deleting category",
+    });
+  }
+};
