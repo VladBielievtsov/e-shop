@@ -29,7 +29,10 @@ import {
   getAllSizes,
   updateSizes,
 } from "./controllers/SizeController";
-import { createCotegory } from "./controllers/CategoriesController";
+import {
+  createCotegory,
+  deleteCotegory,
+} from "./controllers/CategoriesController";
 
 async function main() {
   const app = express();
@@ -96,6 +99,7 @@ async function main() {
 
   //Categories
   app.post("/category", createCotegory);
+  app.delete("/category/:id", deleteCotegory);
 
   // Product Images
   app.post("/product-images", createProductImages);
