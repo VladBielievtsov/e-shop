@@ -87,13 +87,7 @@ export default function page() {
           [...data]
             .reverse()
             .map((product, idx) => (
-              <ProductCard
-                panel={true}
-                product={product}
-                key={product.id}
-                img="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385276.jpg"
-                backImg="https://storage.googleapis.com/lulu-fanatics/product/71842/1280/lululemon-muscle-love-long-sleeve-shirt-white-opal-047748-385275.jpg"
-              />
+              <ProductCard panel={true} product={product} key={product.id} />
             ))
         ) : (
           <h3>There are no products</h3>

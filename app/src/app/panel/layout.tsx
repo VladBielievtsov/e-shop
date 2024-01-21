@@ -30,6 +30,10 @@ export default function ProfileLayout({
       name: "Products",
     },
     {
+      href: "/panel/categories",
+      name: "Categories",
+    },
+    {
       href: "/panel/clients",
       name: "Clients",
     },
