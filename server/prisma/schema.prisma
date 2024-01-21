@@ -31,6 +31,7 @@ model Product {
   images      ProductImages[]
   // category    Category @relation(fields: [category_id], references: [id])
   // category_id Int
+  categories  Category[]
   slug        String          @unique
   price       Float
   discount    Float?
@@ -55,11 +56,8 @@ model ProductSize {
   Product   Product @relation(fields: [productId], references: [id])
 }
 
-// model Category {
-//   id            Int        @id @default(autoincrement())
-//   title         String
-//   parent        Category?  @relation("Subcategories", fields: [parent_id], references: [id])
-//   parent_id     Int?
-//   subcategories Category[] @relation("Subcategories")
-//   products      Product[]
-// }
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String
+  products Product[]
+}

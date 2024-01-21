@@ -29,6 +29,7 @@ import {
   getAllSizes,
   updateSizes,
 } from "./controllers/SizeController";
+import { createCotegory } from "./controllers/CategoriesController";
 
 async function main() {
   const app = express();
@@ -92,6 +93,9 @@ async function main() {
   app.get("/product/:slug", getProductBySlug);
   app.get("/panel-product/:id", getProductById);
   app.post("/favorites", getProductsByIds);
+
+  //Categories
+  app.post("/category", createCotegory);
 
   // Product Images
   app.post("/product-images", createProductImages);
