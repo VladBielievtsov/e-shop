@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Button, Input, Textarea } from "@nextui-org/react";
+import {
+  Button,
+  Input,
+  Textarea,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+} from "@nextui-org/react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Spinner } from "@nextui-org/react";
@@ -12,6 +20,7 @@ import { createSize } from "@/lib/features/sizes/sizesActions";
 import { IoIosClose } from "react-icons/io";
 import { LuImagePlus } from "react-icons/lu";
 import axios from "@/utils/axios";
+import SelectCategory from "@/components/panel/SelectCategory";
 
 type FormValues = {
   title: string;
@@ -30,6 +39,7 @@ export default function page() {
   } = useForm<FormValues>();
   const [isError, setIsError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [selectedCategiry, setSelectedCategiry] = useState(new Set<string>([]));
   const dispatch = useAppDispatch();
   const [sizes, setSizes] = useState<
     { id: string; productId: number; size: string; quantity: number }[]
@@ -157,6 +167,13 @@ export default function page() {
                 {...register("color", { required: "Color is required" })}
               />
             </div>
+          </div>
+          <h4 className="font-bold mt-10">Categiry:</h4>
+          <div className="bg-white shadow-md p-4 rounded-xl mt-4 flex gap-3 flex-wrap">
+            <SelectCategory
+              selectedCategiry={selectedCategiry}
+              setSelectedCategiry={setSelectedCategiry}
+            />
           </div>
           <h4 className="font-bold mt-10">Images:</h4>
           <div className="bg-white shadow-md p-4 rounded-xl mt-4 flex gap-3 flex-wrap">
