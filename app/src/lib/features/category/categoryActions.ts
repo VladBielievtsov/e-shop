@@ -19,3 +19,28 @@ export const getAllCategories = createAsyncThunk<
     }
   }
 });
+
+export const createCategory = createAsyncThunk<
+  ICategory,
+  {
+    name: string;
+  },
+  { rejectValue: SerializedError }
+>("categories/create", async ({ name }, { rejectWithValue }) => {
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const { data } = await axios.post(`/category`, { name }, config);
+
+    return data;
+  } catch (error: any) {
+    if (error.response && error.response.data.message) {
+      return rejectWithValue(error.response.data.message);
+    } else {
+      return rejectWithValue(error.message);
+    }
+  }
+});

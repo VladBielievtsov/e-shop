@@ -2,7 +2,6 @@ import React from "react";
 import { Button, Card, CardHeader, Divider } from "@nextui-org/react";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import { FiEdit2 } from "react-icons/fi";
-import Link from "next/link";
 
 interface CategoryCardProps {
   onOpen: () => void;

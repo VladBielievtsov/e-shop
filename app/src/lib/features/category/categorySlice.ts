@@ -1,6 +1,6 @@
 import { createSlice, SerializedError } from "@reduxjs/toolkit";
 import { IProduct } from "../products/productsSlice";
-import { getAllCategories } from "./categoryActions";
+import { createCategory, getAllCategories } from "./categoryActions";
 import { RootState } from "@/lib/store";
 
 export interface ICategory {
@@ -39,6 +39,10 @@ const categoriesSlice = createSlice({
       state.status = "failed";
       // @ts-ignore
       state.error = payload;
+    });
+    // Create Category
+    builder.addCase(createCategory.fulfilled, (state, { payload }) => {
+      state.categories?.push(payload);
     });
   },
 });

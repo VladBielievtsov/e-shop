@@ -8,9 +8,9 @@ export const getAllCategories = async (req: Request, res: Response) => {
 
     res.json(category);
   } catch (err: any) {
-    console.error("Error during creating category:", err);
+    console.error("Error during getting all categories:", err);
     res.status(500).json({
-      msg: "Error during creating category",
+      msg: "Error during getting all categories",
     });
   }
 };
@@ -27,9 +27,9 @@ export const getCategoryById = async (req: Request, res: Response) => {
 
     res.json(category);
   } catch (err: any) {
-    console.error("Error during creating category:", err);
+    console.error("Error during getting category by id:", err);
     res.status(500).json({
-      msg: "Error during creating category",
+      msg: "Error during getting category by id",
     });
   }
 };
@@ -89,9 +89,9 @@ export const updateCategory = async (req: Request, res: Response) => {
 
     res.json(category);
   } catch (err: any) {
-    console.error("Error during deleting category:", err);
+    console.error("Error during updating category:", err);
     res.status(500).json({
-      msg: "Error during deleting category",
+      msg: "Error during updating category",
     });
   }
 };
