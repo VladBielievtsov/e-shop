@@ -29,7 +29,6 @@ export default function Shop() {
 
   useEffect(() => {
     if (productsStatus === "idle") {
-      // @ts-ignore
       dispatch(fetchAllProducts());
     }
   }, [productsStatus, dispatch]);

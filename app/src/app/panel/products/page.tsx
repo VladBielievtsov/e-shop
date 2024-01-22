@@ -26,7 +26,6 @@ export default function page() {
 
   useEffect(() => {
     if (productsStatus === "idle") {
-      // @ts-ignore
       dispatch(fetchAllProducts());
     } else if (productsStatus === "loading") {
       // setIsLoading(true);

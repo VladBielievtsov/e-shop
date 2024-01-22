@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import CategoryCard from "@/components/panel/CategoryCard";
 import {
   Button,
@@ -12,13 +12,28 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import Link from "next/link";
 import EditCategory from "@/components/panel/EditCategory";
 import AddCategory from "@/components/panel/AddCategory";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { RootState } from "@/lib/store";
+import { getAllCategories } from "@/lib/features/category/categoryActions";
 
 export default function page() {
   const EditCategoryModal = useDisclosure();
   const AddCategoryModal = useDisclosure();
+  const dispatch = useAppDispatch();
+
+  const categoriesStatus = useAppSelector(
+    (state: RootState) => state.categories.status
+  );
+
+  let { categories } = useAppSelector((state: RootState) => state);
+
+  useEffect(() => {
+    if (categoriesStatus === "idle") {
+      dispatch(getAllCategories());
+    }
+  }, [categoriesStatus, dispatch]);
 
   return (
     <div>
@@ -30,7 +45,13 @@ export default function page() {
         </Button>
       </div>
       <div className="mt-10 grid grid-cols-3 gap-4">
-        <CategoryCard onOpen={EditCategoryModal.onOpen} />
+        {categories.categories?.map((category) => (
+          <CategoryCard
+            key={category.id}
+            name={category.name}
+            onOpen={EditCategoryModal.onOpen}
+          />
+        ))}
       </div>
 
       <EditCategory

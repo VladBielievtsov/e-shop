@@ -4,6 +4,7 @@ import { IProduct } from "./productsSlice";
 
 export const fetchAllProducts = createAsyncThunk<
   IProduct[],
+  undefined,
   { rejectValue: SerializedError }
 >("products/fetchAllProducts", async (_, { rejectWithValue }) => {
   try {

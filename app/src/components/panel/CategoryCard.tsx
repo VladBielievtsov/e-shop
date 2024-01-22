@@ -5,14 +5,15 @@ import { FiEdit2 } from "react-icons/fi";
 
 interface CategoryCardProps {
   onOpen: () => void;
+  name: string;
 }
 
-export default function CategoryCard({ onOpen }: CategoryCardProps) {
+export default function CategoryCard({ onOpen, name }: CategoryCardProps) {
   return (
     <Card className="max-w-full">
       <CardHeader className="flex gap-3 justify-between">
         <div className="flex flex-col">
-          <p className="text-md">T-Shirt</p>
+          <p className="text-md">{name}</p>
           <p className="text-small text-default-500">103 Products</p>
         </div>
         <div className="flex space-x-2">
