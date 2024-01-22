@@ -15,6 +15,25 @@ export const getAllCategories = async (req: Request, res: Response) => {
   }
 };
 
+export const getCategoryById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const category = await prisma.category.findUnique({
+      where: {
+        id: +id,
+      },
+    });
+
+    res.json(category);
+  } catch (err: any) {
+    console.error("Error during creating category:", err);
+    res.status(500).json({
+      msg: "Error during creating category",
+    });
+  }
+};
+
 export const createCategory = async (req: Request, res: Response) => {
   try {
     const { name } = req.body;

@@ -33,6 +33,7 @@ import {
   createCategory,
   deleteCategory,
   getAllCategories,
+  getCategoryById,
   updateCategory,
 } from "./controllers/CategoriesController";
 
@@ -101,6 +102,7 @@ async function main() {
 
   //Categories
   app.get("/category", getAllCategories);
+  app.get("/category/:id", getCategoryById);
   app.post("/category", createCategory);
   app.delete("/category/:id", deleteCategory);
   app.patch("/category/:id", updateCategory);
