@@ -2,13 +2,26 @@ import React from "react";
 import { Button, Card, CardHeader, Divider } from "@nextui-org/react";
 import { RiDeleteBin7Line } from "react-icons/ri";
 import { FiEdit2 } from "react-icons/fi";
+import Link from "next/link";
 
 interface CategoryCardProps {
   onOpen: () => void;
   name: string;
+  id: number;
+  setIsEditing: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
-export default function CategoryCard({ onOpen, name }: CategoryCardProps) {
+export default function CategoryCard({
+  onOpen,
+  name,
+  id,
+  setIsEditing,
+}: CategoryCardProps) {
+  const onPressEdit = () => {
+    onOpen();
+    setIsEditing(id);
+  };
+
   return (
     <Card className="max-w-full">
       <CardHeader className="flex gap-3 justify-between">
@@ -18,7 +31,7 @@ export default function CategoryCard({ onOpen, name }: CategoryCardProps) {
         </div>
         <div className="flex space-x-2">
           <Button
-            onPress={onOpen}
+            onPress={onPressEdit}
             className="border border-zinc-300 min-w-0 hover:bg-zinc-300"
           >
             <FiEdit2 />

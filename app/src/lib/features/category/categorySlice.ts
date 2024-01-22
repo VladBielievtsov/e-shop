@@ -1,6 +1,7 @@
 import { createSlice, SerializedError } from "@reduxjs/toolkit";
 import { IProduct } from "../products/productsSlice";
 import { getAllCategories } from "./categoryActions";
+import { RootState } from "@/lib/store";
 
 export interface ICategory {
   id: number;
@@ -41,5 +42,11 @@ const categoriesSlice = createSlice({
     });
   },
 });
+
+export const getCategoryById = (state: RootState, categoryId: number) => {
+  return state.categories.categories?.find(
+    (category) => category.id === categoryId
+  );
+};
 
 export default categoriesSlice.reducer;

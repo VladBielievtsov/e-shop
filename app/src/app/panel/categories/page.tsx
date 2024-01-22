@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CategoryCard from "@/components/panel/CategoryCard";
 import {
   Button,
@@ -21,6 +21,7 @@ import { getAllCategories } from "@/lib/features/category/categoryActions";
 export default function page() {
   const EditCategoryModal = useDisclosure();
   const AddCategoryModal = useDisclosure();
+  const [isEditing, setIsEditing] = useState<number | null>(null);
   const dispatch = useAppDispatch();
 
   const categoriesStatus = useAppSelector(
@@ -48,13 +49,16 @@ export default function page() {
         {categories.categories?.map((category) => (
           <CategoryCard
             key={category.id}
+            id={category.id}
             name={category.name}
+            setIsEditing={setIsEditing}
             onOpen={EditCategoryModal.onOpen}
           />
         ))}
       </div>
 
       <EditCategory
+        isEditing={isEditing}
         isOpen={EditCategoryModal.isOpen}
         onOpenChange={EditCategoryModal.onOpenChange}
       />
