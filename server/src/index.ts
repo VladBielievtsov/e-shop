@@ -30,9 +30,10 @@ import {
   updateSizes,
 } from "./controllers/SizeController";
 import {
-  createCotegory,
-  deleteCotegory,
-  updateCotegory,
+  createCategory,
+  deleteCategory,
+  getAllCategories,
+  updateCategory,
 } from "./controllers/CategoriesController";
 
 async function main() {
@@ -99,9 +100,10 @@ async function main() {
   app.post("/favorites", getProductsByIds);
 
   //Categories
-  app.post("/category", createCotegory);
-  app.delete("/category/:id", deleteCotegory);
-  app.patch("/category/:id", updateCotegory);
+  app.get("/category", getAllCategories);
+  app.post("/category", createCategory);
+  app.delete("/category/:id", deleteCategory);
+  app.patch("/category/:id", updateCategory);
 
   // Product Images
   app.post("/product-images", createProductImages);

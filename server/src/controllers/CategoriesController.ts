@@ -2,7 +2,20 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-export const createCotegory = async (req: Request, res: Response) => {
+export const getAllCategories = async (req: Request, res: Response) => {
+  try {
+    const category = await prisma.category.findMany();
+
+    res.json(category);
+  } catch (err: any) {
+    console.error("Error during creating category:", err);
+    res.status(500).json({
+      msg: "Error during creating category",
+    });
+  }
+};
+
+export const createCategory = async (req: Request, res: Response) => {
   try {
     const { name } = req.body;
 
@@ -21,7 +34,7 @@ export const createCotegory = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteCotegory = async (req: Request, res: Response) => {
+export const deleteCategory = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -40,7 +53,7 @@ export const deleteCotegory = async (req: Request, res: Response) => {
   }
 };
 
-export const updateCotegory = async (req: Request, res: Response) => {
+export const updateCategory = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
