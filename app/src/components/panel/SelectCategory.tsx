@@ -1,3 +1,4 @@
+import { useGetCategories } from "@/hooks/useGetCategories";
 import {
   Button,
   Dropdown,
@@ -8,14 +9,16 @@ import {
 import React from "react";
 
 interface SelectCategoryProps {
-  selectedCategiry: Set<string>;
-  setSelectedCategiry: React.Dispatch<React.SetStateAction<Set<string>>>;
+  selectedCategiry: Set<number>;
+  setSelectedCategiry: React.Dispatch<React.SetStateAction<Set<number>>>;
 }
 
 export default function SelectCategory({
   selectedCategiry,
   setSelectedCategiry,
 }: SelectCategoryProps) {
+  const categories = useGetCategories();
+
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -31,15 +34,17 @@ export default function SelectCategory({
         variant="flat"
         closeOnSelect={false}
         selectionMode="multiple"
-        // selectedKeys={selectedCategiry}
+        selectedKeys={selectedCategiry}
         // @ts-ignore
         onSelectionChange={setSelectedCategiry}
       >
-        <DropdownItem key="text">Text</DropdownItem>
-        <DropdownItem key="number">Number</DropdownItem>
-        <DropdownItem key="date">Date</DropdownItem>
-        <DropdownItem key="single_date">Single Date</DropdownItem>
-        <DropdownItem key="iteration">Iteration</DropdownItem>
+        {!!categories ? (
+          categories?.map((category) => (
+            <DropdownItem key={category.id}>{category.name}</DropdownItem>
+          ))
+        ) : (
+          <DropdownItem>Error</DropdownItem>
+        )}
       </DropdownMenu>
     </Dropdown>
   );

@@ -28,12 +28,13 @@ export const createProduct = createAsyncThunk<
     price: number;
     color: string;
     discount: number;
+    categoriesIds: number[];
   },
   { rejectValue: SerializedError }
 >(
   "products/create",
   async (
-    { title, description, price, color, discount },
+    { title, description, price, color, discount, categoriesIds },
     { rejectWithValue }
   ) => {
     try {
@@ -44,7 +45,7 @@ export const createProduct = createAsyncThunk<
       };
       const { data } = await axios.post(
         `/product`,
-        { title, description, price, color, discount },
+        { title, description, price, color, discount, categoriesIds },
         config
       );
 

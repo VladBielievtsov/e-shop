@@ -17,24 +17,14 @@ import AddCategory from "@/components/panel/AddCategory";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { RootState } from "@/lib/store";
 import { getAllCategories } from "@/lib/features/category/categoryActions";
+import { useGetCategories } from "@/hooks/useGetCategories";
 
 export default function page() {
   const EditCategoryModal = useDisclosure();
   const AddCategoryModal = useDisclosure();
   const [isEditing, setIsEditing] = useState<number | null>(null);
-  const dispatch = useAppDispatch();
 
-  const categoriesStatus = useAppSelector(
-    (state: RootState) => state.categories.status
-  );
-
-  let { categories } = useAppSelector((state: RootState) => state);
-
-  useEffect(() => {
-    if (categoriesStatus === "idle") {
-      dispatch(getAllCategories());
-    }
-  }, [categoriesStatus, dispatch]);
+  const categories = useGetCategories();
 
   return (
     <div>
@@ -46,7 +36,7 @@ export default function page() {
         </Button>
       </div>
       <div className="mt-10 grid grid-cols-3 gap-4">
-        {categories.categories?.map((category) => (
+        {categories?.map((category) => (
           <CategoryCard
             key={category.id}
             id={category.id}

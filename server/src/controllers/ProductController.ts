@@ -6,9 +6,14 @@ const prisma = new PrismaClient();
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
-    const { title, description, price, color, discount } = req.body;
+    const { title, description, price, color, discount, categoriesIds } =
+      req.body;
 
     const slug = title.split(" ").join("-").toLowerCase();
+
+    const categories = categoriesIds.map((ids: number) => {
+      return { id: +ids };
+    });
 
     const product = await prisma.product.create({
       data: {
@@ -18,6 +23,11 @@ export const createProduct = async (req: Request, res: Response) => {
         price,
         color,
         discount,
+        categories: {
+          connect: categories.map((category: { id: number }) => ({
+            id: category.id,
+          })),
+        },
       },
     });
 
@@ -132,6 +142,9 @@ export const getProductBySlug = async (req: Request, res: Response) => {
     const product = await prisma.product.findUnique({
       where: {
         slug,
+      },
+      include: {
+        categories: true,
       },
     });
 

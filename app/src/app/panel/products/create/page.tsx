@@ -39,7 +39,7 @@ export default function page() {
   } = useForm<FormValues>();
   const [isError, setIsError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [selectedCategiry, setSelectedCategiry] = useState(new Set<string>([]));
+  const [selectedCategiry, setSelectedCategiry] = useState(new Set<number>([]));
   const dispatch = useAppDispatch();
   const [sizes, setSizes] = useState<
     { id: string; productId: number; size: string; quantity: number }[]
@@ -54,6 +54,10 @@ export default function page() {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     setIsError("");
+    if (selectedCategiry.size === 0) {
+      setIsError("Select category");
+      return false;
+    }
     setIsLoading(true);
     const body = {
       title: data.title,
@@ -61,6 +65,7 @@ export default function page() {
       price: +data.price,
       color: data.color,
       discount: +data.discount,
+      categoriesIds: Array.from(selectedCategiry),
     };
 
     const resProduct = await dispatch(createProduct(body));
