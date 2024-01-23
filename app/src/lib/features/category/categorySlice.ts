@@ -4,6 +4,7 @@ import {
   createCategory,
   deleteCategory,
   getAllCategories,
+  updateCategory,
 } from "./categoryActions";
 import { RootState } from "@/lib/store";
 
@@ -48,11 +49,19 @@ const categoriesSlice = createSlice({
     builder.addCase(createCategory.fulfilled, (state, { payload }) => {
       state.categories?.push(payload);
     });
-    // Delete product
+    // Delete Category
     builder.addCase(deleteCategory.fulfilled, (state, { payload }) => {
       state.categories = state.categories?.filter(
         (category) => category.id !== payload.id
       );
+    });
+    // Update Category
+    builder.addCase(updateCategory.fulfilled, (state, { payload }) => {
+      const categories = state.categories?.filter(
+        (category) => category.id !== payload.id
+      );
+      categories?.push(payload);
+      state.categories = categories;
     });
   },
 });

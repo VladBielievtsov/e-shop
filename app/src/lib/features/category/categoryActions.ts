@@ -68,3 +68,29 @@ export const deleteCategory = createAsyncThunk<
     }
   }
 });
+
+export const updateCategory = createAsyncThunk<
+  ICategory,
+  {
+    id: number;
+    name: string;
+  },
+  { rejectValue: SerializedError }
+>("categories/update", async ({ id, name }, { rejectWithValue }) => {
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const { data } = await axios.patch(`/category/${id}`, { name }, config);
+
+    return data;
+  } catch (error: any) {
+    if (error.response && error.response.data.message) {
+      return rejectWithValue(error.response.data.message);
+    } else {
+      return rejectWithValue(error.message);
+    }
+  }
+});
