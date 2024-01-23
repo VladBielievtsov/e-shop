@@ -1,6 +1,10 @@
 import { createSlice, SerializedError } from "@reduxjs/toolkit";
 import { IProduct } from "../products/productsSlice";
-import { createCategory, getAllCategories } from "./categoryActions";
+import {
+  createCategory,
+  deleteCategory,
+  getAllCategories,
+} from "./categoryActions";
 import { RootState } from "@/lib/store";
 
 export interface ICategory {
@@ -43,6 +47,12 @@ const categoriesSlice = createSlice({
     // Create Category
     builder.addCase(createCategory.fulfilled, (state, { payload }) => {
       state.categories?.push(payload);
+    });
+    // Delete product
+    builder.addCase(deleteCategory.fulfilled, (state, { payload }) => {
+      state.categories = state.categories?.filter(
+        (category) => category.id !== payload.id
+      );
     });
   },
 });

@@ -44,3 +44,27 @@ export const createCategory = createAsyncThunk<
     }
   }
 });
+
+export const deleteCategory = createAsyncThunk<
+  ICategory,
+  { id: number },
+  { rejectValue: SerializedError }
+>("categories/delete", async ({ id }, { rejectWithValue }) => {
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    const { data } = await axios.delete(`/category/${id}`, config);
+
+    return data;
+  } catch (error: any) {
+    if (error.response && error.response.data.message) {
+      return rejectWithValue(error.response.data.message);
+    } else {
+      return rejectWithValue(error.message);
+    }
+  }
+});
